@@ -64,8 +64,14 @@ function parse(text) {
   const blocks = [];
   for (const raw of text.split(/\r?\n/)) {
     if (!raw.trim()) continue;
-    const c = (raw.includes("\t") ? raw.split("\t") : raw.trim().split(/\s{2,}/)).map(v => (v || "").trim());
-    const key = (c[0] || "").toLowerCase().replace(/\s+/g, "");
+    let c = (raw.includes("\t") ? raw.split("\t") : raw.trim().split(/\s{2,}/)).map(v => (v || "").trim());
+    // the row label may not be in the first column (e.g. an "ID Number" column before it)
+    const KEYS = ["fieldname", "shiftcode", "workstatus", "ot"];
+    const norm = v => (v || "").toLowerCase().replace(/\s+/g, "");
+    let ki = c.findIndex((v, i) => i < 8 && KEYS.includes(norm(v)));
+    if (ki < 0) continue;
+    c = c.slice(ki);
+    const key = norm(c[0]);
     if (key === "fieldname") {
       const dates = {}; let total = -1, nameCol = -1;
       c.forEach((v, i) => { const m = v.match(/(\d{4})-(\d{1,2})-(\d{1,2})/); if (m) dates[i] = [+m[1], +m[2] - 1, +m[3]]; else if (/total/i.test(v)) total = i; else if (/^name$/i.test(v) && nameCol < 0) nameCol = i; });
