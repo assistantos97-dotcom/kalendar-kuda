@@ -204,11 +204,11 @@ function parse(text) {
 }
 function iso(y, m, d) { return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`; }
 const mins = t => { const [h, m] = (t || '0:0').split(':').map(Number); return h * 60 + m; };
-const isOff = D => D && (D.ws === 'O' || D.ws === 'R' || D.shift === 'OFF' || D.shift === 'REST');
-function planHours(D) {
+const isOff = (D, k) => (D && (D.ws === 'O' || D.ws === 'R' || D.shift === 'OFF' || D.shift === 'REST')) || ((!D || (!D.ws && !D.shift)) && k && [0, 6].includes(new Date(k + 'T12:00').getDay()));
+function planHours(D, k) {
   if (!D || !D.ot) return 0;
   const end = mins(D.ot);
-  let h = isOff(D) ? (end - mins($('oStart').value)) / 60 - (+$('brk').value || 0) : (end - mins($('sEnd').value)) / 60;
+  let h = isOff(D, k) ? (end - mins($('oStart').value)) / 60 - (+$('brk').value || 0) : (end - mins($('sEnd').value)) / 60;
   return Math.max(0, Math.round(h * 100) / 100);
 }
 function holidays() { const h = {}; for (const l of $('hol').value.split(/\r?\n/)) { const m = l.match(/(\d{4})-(\d{1,2})-(\d{1,2})\s*(.*)/); if (m) h[iso(+m[1], +m[2] - 1, +m[3])] = m[4].trim(); } return h; }
@@ -232,9 +232,9 @@ function calc(P) {
   const hol = holidays(), rows = [];
   for (const k of dateList()) {
     const D = P.days[k], dow = new Date(k + 'T12:00').getDay();
-    const autoType = hol[k] !== undefined ? 'P' : isOff(D) ? 'O' : 'N';
+    const autoType = hol[k] !== undefined ? 'P' : isOff(D, k) ? 'O' : 'N';
     const type = S.get(`type:${P.name}:${k}`, autoType);
-    const ph = planHours(D);
+    const ph = planHours(D, k);
     const a = S.get(`act:${P.name}:${k}`, '');
     rows.push({k, dow, D, type, autoType, ph, pp: pay(type, ph), a, ap: a === '' ? 0 : pay(type, a), hol: hol[k]});
   }

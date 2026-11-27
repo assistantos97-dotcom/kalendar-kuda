@@ -128,6 +128,8 @@ function statusOf(D) {
   const s = (D.shift || "").toUpperCase();
   if (D.ws === "O" || s === "OFF") return "O";
   if (D.ws === "R" || s === "REST") return "R";
+  // empty Saturday/Sunday = day off (Sat OFF, Sun REST)
+  if (!D.ws && !s && D.dt) { const wd = new Date(D.dt[0], D.dt[1], D.dt[2]).getDay(); if (wd === 6) return "O"; if (wd === 0) return "R"; }
   return "W";
 }
 function holidays() {
@@ -223,10 +225,10 @@ function draw(P, hol, hW, hO) {
         continue;
       }
       const k = [Y, M, day].join("-");
-      const D = P.days[k] || {shift: "", ws: "", ot: ""};
+      const D = P.days[k] || {shift: "", ws: "", ot: "", none: 1};
       const st = statusOf(D), ot = D.ot, off = st !== "W";
       const hn = hol[k];
-      rr(g, x, y, cw, rh, 16, (st === "O") ? "#fde0e6" : "#fff200", hn ? "#d7141a" : "#444", hn ? 5 : 2);
+      rr(g, x, y, cw, rh, 16, D.none ? "#f1f1f1" : (st === "O") ? "#fde0e6" : "#fff200", hn ? "#d7141a" : "#444", hn ? 5 : 2);
       const lu = lunar(Y, M, day);
       [...lu].forEach((ch, i) => txt(g, ch, x + 16, y + 26 + 26 * i, `900 21px ${SANS}`, "#111", "left"));
       if (r === 0 && imgs.sun) {
@@ -239,7 +241,9 @@ function draw(P, hol, hW, hO) {
       const px = x + 22, pw = cw - 44;
       const lbl = st === "W" ? "W" : st === "O" ? "OFF" : "REST";
       const col = st === "W" ? "#2fd23a" : st === "O" ? "#f78c98" : "#fbe7a8";
-      if (ot) {
+      if (D.none) {
+        // date outside the pasted data: show date only
+      } else if (ot) {
         pill(g, px + 10, y + 82, pw - 20, 28, col, lbl, 22);
         pill(g, px - 6, y + 112, pw + 12, 28, "#b8e2fb", `OT ${ot}`, 24);
       } else {
@@ -288,12 +292,20 @@ async function run() {
   }
   await ready;
   const hol = holidays(), hW = +$("hW").value || 0, hO = +$("hO").value || 0;
+  const cals = [];
   for (const p of people) {
+    const by = {};
+    for (const [k, D] of Object.entries(p.days)) { const mk = D.dt[0] * 12 + D.dt[1]; (by[mk] || (by[mk] = {})); by[mk][k] = D; }
+    const mks = Object.keys(by).map(Number).sort((a, b) => a - b);
+    // one month: keep sheet Total; several months: total per month from settings
+    for (const mk of mks) cals.push({...p, days: by[mk], total: mks.length > 1 ? null : p.total});
+  }
+  for (const p of cals) {
     const {cv, Y, M} = draw(p, hol, hW, hO);
     const url = cv.toDataURL("image/png");
     const fname = `OT_${p.name.replace(/\s+/g, "_")}_${EN[M]}_${Y}.png`;
     const box = document.createElement("div"); box.className = "cal";
-    const h = document.createElement("h3"); h.textContent = p.name; box.append(h);
+    const h = document.createElement("h3"); h.textContent = `${p.name} · ${(LANG==="en"?EN:MS)[M]} ${Y}`; box.append(h);
     const img = document.createElement("img"); img.src = url; img.alt = `OT ${p.name}`; box.append(img);
     const row = document.createElement("div"); row.className = "row";
     const b = document.createElement("button"); b.className = "dl"; b.textContent = "Download PNG"; b.hidden = false;
@@ -306,7 +318,7 @@ async function run() {
     const hint = document.createElement("span"); hint.className = "hint"; hint.textContent = L.save;
     row.append(b, hint); box.append(row); out.append(box);
   }
-  msg.textContent = L.done(people.length, people.map(p => p.name).join(", "));
+  msg.textContent = L.done(cals.length, people.map(p => p.name).join(", "));
 }
 
 document.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { LANG = b.dataset.l; try { localStorage.setItem('kk-lang', LANG); } catch (e) {} applyLang(); if ($("out").children.length) run(); });
