@@ -5,71 +5,84 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OT Plan vs Actual</title>
 <style>
-/* VOICE: practical payroll helper for shift workers, clear and trustworthy
-   IDEA: the team's own Excel OT sheet (Day | Date | Plan | RM) brought to life with an Actual column
-   PICTURE: the summary scoreboard (Plan vs Actual hours & RM) above a ledger-style day table
-   COLOUR and TYPE: navy #012056, red #c8101e accent, yellow #ffd21a highlights; system sans, tabular numbers
-   LAYOUT: one column: paste -> cut-off & settings -> person tabs -> scoreboard -> day table */
-:root{color-scheme:light dark;--bg:light-dark(#f3f5fa,#0b1222);--card:light-dark(#fff,#131c33);--ink:light-dark(#101418,#e8ecf5);--mute:light-dark(#5a6372,#9aa6bd);--line:light-dark(#d5dae4,#27365a);--navy:#012056;--red:#c8101e;--yel:#ffd21a;--we:light-dark(#dfe6f7,#1b2a4d);--off:light-dark(#fde7ea,#3a1d27);--ph:light-dark(#fff3c4,#3b3315);--ok:#14833b;--bad:#c8101e}
+/* VOICE: practical payroll helper for shift workers, calm and modern
+   IDEA: the team's Excel OT sheet turned into a clean app: scoreboard on top, ledger below
+   PICTURE: two scoreboard cards (Hours, Ringgit) with Plan vs Actual and a delta chip, above the day ledger
+   COLOUR and TYPE: deep navy to royal blue header, red accent, yellow highlights; Plus Jakarta Sans, tabular numbers
+   LAYOUT: segmented nav in header -> paste card -> settings -> person tabs -> scoreboard -> ledger */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+:root{color-scheme:light dark;--bg:light-dark(#f1f5f9,#0b1120);--card:light-dark(#ffffff,#121a30);--ink:light-dark(#0f172a,#e6ecf8);--mute:light-dark(#64748b,#93a1bd);--line:light-dark(#e3e8f2,#223056);--soft:light-dark(#f5f7fc,#0f1730);--navy:#1e293b;--blue:#4f46e5;--red:#4f46e5;--yel:#c7d2fe;--ok:#059669;--bad:#dc2626;--we:light-dark(#f8fafc,#111a2e);--off:light-dark(#f5f3ff,#1a1838);--ph:light-dark(#fffbeb,#2a2512);--sh:0 1px 2px #0f172a0d,0 8px 24px #0f172a14}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:clip}
-header{background:var(--navy);color:#fff;padding:18px max(5vw,16px);border-bottom:5px solid var(--red)}
-.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
-header h1{margin:0;font-size:clamp(24px,5vw,36px);line-height:1.1;font-weight:900}header h1 b{color:var(--yel)}
-header p{margin:6px 0 0;color:#c9d4ee;font-size:15px}
-.lang{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.lang button{min-height:40px;padding:0 14px;color:#fff;background:transparent;border:1px solid #4a5d8f}
-.lang button.on{background:var(--yel);color:#111;border-color:var(--yel)}
-.lang a{color:#012056;background:#fff;font-weight:800;text-decoration:none;padding:9px 14px;border-radius:10px}
-main{max-width:1240px;margin:0 auto;padding:20px max(4vw,12px) 60px;display:grid;gap:18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
-.card h2{margin:0 0 8px;font-size:19px}
-textarea{width:100%;min-height:130px;font:14px/1.4 Consolas,monospace;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);white-space:pre;overflow:auto}
-.hint{color:var(--mute);font-size:14px;margin:6px 0 0}
-.row{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-top:12px}
-button{font:inherit;font-weight:700;min-height:44px;padding:0 18px;border-radius:10px;border:0;cursor:pointer;background:var(--red);color:#fff}
-button.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--yel);outline-offset:2px}
-label.f{display:grid;gap:4px;font-size:14px;color:var(--mute)}
-input,select{font:16px system-ui;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-height:42px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:clip}
+header{background:radial-gradient(700px 260px at 85% -30%,#6366f155,transparent 60%),#1e293b;color:#fff;padding:22px max(5vw,16px) 64px}
+.top{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;max-width:1240px;margin:0 auto}
+header h1{margin:0;font-size:clamp(26px,5vw,40px);line-height:1.05;font-weight:800}header h1 b{color:#a5b4fc}
+header p{margin:8px auto 0;color:#c7d4f5;font-size:15px;max-width:1240px}
+.nav{display:flex;gap:4px;padding:4px;border-radius:999px;background:#ffffff1f}
+.nav a{color:#dbe5ff;text-decoration:none;font-weight:700;font-size:14px;padding:9px 16px;border-radius:999px;white-space:nowrap}
+.nav a.on{background:#fff;color:var(--navy)}
+.lang{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.lang button{min-height:38px;padding:0 12px;border-radius:999px;color:#fff;background:transparent;border:1px solid #ffffff55;font-size:14px;box-shadow:none}
+.lang button.on{background:#fff;color:#1e293b;border-color:#fff}
+main{max-width:1240px;margin:-44px auto 0;padding:0 max(4vw,12px) 60px;display:grid;gap:16px}
+.card{background:var(--card);border-radius:20px;padding:18px 20px;box-shadow:var(--sh)}
+.card h2{margin:0 0 10px;font-size:18px;font-weight:800}
+textarea{width:100%;min-height:120px;font:13px/1.45 Consolas,ui-monospace,monospace;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--soft);color:var(--ink);white-space:pre;overflow:auto}
+.hint{color:var(--mute);font-size:14px;margin:8px 0 0}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin-top:14px}
+button{font:inherit;font-weight:700;min-height:44px;padding:0 20px;border-radius:12px;border:0;cursor:pointer;background:var(--red);color:#fff;box-shadow:0 6px 16px #4f46e533}
+button.alt{background:var(--soft);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+button.warn{background:var(--soft);color:var(--bad);border:1px solid #dc262655;box-shadow:none}
+button.warn.arm{background:var(--bad);color:#fff}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--yel);outline-offset:2px}
+label.f{display:grid;gap:4px;font-size:13px;font-weight:600;color:var(--mute)}
+input,select{font:16px "Plus Jakarta Sans",system-ui;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--soft);color:var(--ink);min-height:44px}
 input[type=number]{width:96px}
-#msg{font-weight:600;margin:0}#msg.err{color:#e0323f}
+#msg{font-weight:700;margin:0;font-size:14px;color:var(--ok)}#msg.err{color:var(--bad)}
 .tabs{display:flex;gap:8px;flex-wrap:wrap}
-.tabs button{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.tabs button{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:none;border-radius:999px}
 .tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
-.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px}
-.sc{border-radius:14px;padding:14px 16px;background:var(--card);border:1px solid var(--line)}
-.sc h3{margin:0 0 6px;font-size:14px;color:var(--mute);font-weight:700}
-.sc .big{display:flex;gap:18px;align-items:baseline;flex-wrap:wrap}
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.sc{border-radius:20px;padding:18px 20px 18px 24px;background:var(--card);box-shadow:var(--sh);position:relative;overflow:hidden}
+.sc::before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:var(--blue)}
+.sc h3{margin:0 0 10px;font-size:14px;color:var(--mute);font-weight:700}
+.sc .big{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .sc .big div{display:grid}
-.sc .lab{font-size:13px;color:var(--mute)}
-.sc .v{font-size:clamp(26px,4vw,34px);font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
-.sc .v.p{color:var(--navy)}:root[data-theme=dark] .sc .v.p{color:#8fb3ff}
-.d{font-weight:800;white-space:nowrap}.d.pos{color:var(--ok)}.d.neg{color:var(--bad)}
-.bar{height:10px;border-radius:5px;background:var(--line);overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--navy),var(--red))}
-.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.sc .lab{font-size:13px;color:var(--mute);font-weight:600}
+.sc .v{font-size:clamp(28px,4.4vw,40px);font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.1}
+.sc .v.p{color:var(--blue)}:root[data-theme=dark] .sc .v.p{color:#8fb3ff}
+.chip{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:5px 12px;border-radius:999px;font-weight:800;font-size:14px;white-space:nowrap}
+.chip.pos{background:#05966918;color:var(--ok)}.chip.neg{background:#dc262614;color:var(--bad)}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;border-radius:4px;background:var(--blue)}
+.ledger{background:var(--card);border-radius:20px;box-shadow:var(--sh);overflow:hidden}
+.scroll{overflow-x:auto}
 table{border-collapse:collapse;width:100%;min-width:720px;font-size:15px}
-th{background:var(--navy);color:#fff;font-weight:700;padding:9px 8px;text-align:left;position:sticky;top:0}
+th{background:var(--soft);color:var(--mute);font-weight:700;font-size:13px;padding:12px 10px;text-align:left;border-bottom:1px solid var(--line)}
 th.n,td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-td{padding:6px 8px;border-top:1px solid var(--line)}
+td{padding:7px 10px;border-bottom:1px solid var(--line)}
 tr.we td{background:var(--we)}tr.off td{background:var(--off)}tr.ph td{background:var(--ph)}
-td input[type=number]{width:84px;min-height:38px;text-align:right}
-td select{min-height:38px;padding:4px 6px}
-tfoot td{font-weight:900;background:var(--yel);color:#111;border-top:2px solid #111}
-.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;color:var(--mute);margin-top:8px}
+td input[type=number]{width:84px;min-height:38px;text-align:right;padding:6px 10px;background:var(--card)}
+td select{min-height:36px;padding:4px 10px;border-radius:999px;font-size:14px;font-weight:600;background:var(--card)}
+tr.off td select{border-color:#a5b4fc;color:#4338ca}tr.ph td select{border-color:#fcd34d;color:#92400e}
+:root[data-theme=dark] tr.off td select{color:#c7d2fe}:root[data-theme=dark] tr.ph td select{color:#fde68a}
+td.d.pos{color:var(--ok);font-weight:800}td.d.neg{color:var(--bad);font-weight:800}
+tfoot td{font-weight:800;background:var(--navy);color:#fff;border:0;padding:12px 10px}
+tfoot td.n{color:#c7d2fe}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--mute);padding:12px 16px}
 .legend span{display:inline-flex;gap:6px;align-items:center}.legend i{width:14px;height:14px;border-radius:4px;display:inline-block;border:1px solid var(--line)}
-details summary{cursor:pointer;font-weight:700}
-.rates{font-size:14px}.rates td{padding:4px 8px}
+details summary{cursor:pointer;font-weight:800}
+.rates{font-size:14px;min-width:0}.rates td{padding:6px 10px}
 .ds{display:none}
-@media(max-width:600px){table{font-size:13px;min-width:0}td,th{padding:6px 4px}td input[type=number]{width:56px;padding:6px}td select{width:74px;font-size:13px}.hm{display:none}.dl{display:none}.ds{display:inline}th{font-size:12px}}
-@media print{header .lang,.card.in,#tabs{display:none}body{background:#fff}}
+@media(max-width:600px){table{font-size:13px;min-width:0}td,th{padding:6px 4px}td input[type=number]{width:56px;padding:6px}td select{width:76px;font-size:12px;padding:4px 6px}.hm{display:none}.dl{display:none}.ds{display:inline}th{font-size:12px}.nav a{padding:8px 12px;font-size:13px}}
+@media print{header .nav,header .lang,.card.in,#tabs{display:none}body{background:#fff}}
 </style>
 </head>
 <body>
 <header>
   <div class="top"><h1 data-i="title"></h1>
-    <div class="lang"><button data-l="ms">BM</button><button data-l="en">EN</button><a href="./" data-i="cal"></a></div></div>
+    <nav class="nav" aria-label="Pages"><a href="./" id="navCal">🐎 <span data-i="cal"></span></a><a href="ot.html" class="on" aria-current="page">📊 Plan vs Actual</a></nav>
+    <div class="lang"><button data-l="ms">BM</button><button data-l="en">EN</button></div></div>
   <p data-i="sub"></p>
 </header>
 <main>
@@ -80,8 +93,8 @@ details summary{cursor:pointer;font-weight:700}
     <div class="row">
       <label class="f"><span data-i="from"></span><input type="date" id="from"></label>
       <label class="f"><span data-i="to"></span><input type="date" id="to"></label>
-      <label class="f"><span data-i="target"></span><input type="number" id="target" min="0" step="1" value="50"></label>
       <button id="go" data-i="go"></button>
+      <button class="warn" id="reset" data-i="reset"></button>
     </div>
   </section>
 
@@ -111,10 +124,10 @@ details summary{cursor:pointer;font-weight:700}
 {
 const $ = id => document.getElementById(id);
 const T = {
- ms:{title:'OT <b>Plan vs Actual</b>',sub:'Paste jadual dari Excel → jam & RM plan dikira sendiri → isi jam actual → banding.',cal:'🐎 Kalendar Kuda',
+ ms:{title:'OT <b>Plan vs Actual</b>',sub:'Paste jadual dari Excel → jam & RM plan dikira sendiri → isi jam actual → banding.',cal:'Kalendar Kuda',
   h1:'1. Paste jadual Excel & pilih cut-off',ph:'Copy baris Fieldname / Shiftcode / WorkStatus / OT dari Excel, paste di sini',
-  hint1:'Copy terus dari Excel (boleh penuh, termasuk ID / lajur tersembunyi). Isi tarikh cut-off sendiri. Jam actual yang anda taip disimpan dalam browser ini.',
-  from:'Cut-off mula',to:'Cut-off tamat',target:'Sasaran OT (jam)',go:'Kira',h2:'2. Tetapan kiraan (waktu shift, cuti umum, kadar)',
+  hint1:'Copy terus dari Excel (boleh penuh, termasuk ID / lajur tersembunyi). Isi tarikh cut-off sendiri. Jam actual disimpan dalam browser ini; tekan Reset untuk kosongkan semua.',
+  from:'Cut-off mula',to:'Cut-off tamat',go:'Kira',reset:'Reset',resetQ:'Tekan sekali lagi untuk padam semua',resetDone:'Semua data dikosongkan.',h2:'2. Tetapan kiraan (waktu shift, cuti umum, kadar)',
   sEnd:'Shift biasa tamat',oStart:'OT hari OFF mula',brk:'Rehat hari OFF (jam)',hint2:'Jam plan = masa tamat OT − tamat shift (hari kerja), atau − mula OFF − rehat (hari OFF/REST). Jam dibundarkan ke bawah untuk bayaran; minimum 1 jam.',
   hol:'Cuti umum (YYYY-MM-DD Nama, satu baris)',rt:'Kadar OT (Revised, MJG9–MJG14)',
   day:'Hari',date:'Tarikh',type:'Jenis',plan:'Plan (jam)',planrm:'Plan RM',act:'Actual (jam)',actrm:'Actual RM',diff:'Beza RM',total:'Jumlah',
@@ -124,14 +137,14 @@ const T = {
   done:(n,x)=>`Siap: ${n} orang (${x}).`,legend:['Sabtu/Ahad','Hari OFF/REST','Cuti umum'],
   days:['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'],
   r:[['Hari biasa','Jam 1–2: RM10/jam','Jam ke-3 ke atas: RM30/jam'],['Hari OFF','1–7 jam: RM10/jam','8–10 jam: RM12.50/jam dari jam 1; 11 jam: RM200; jam ke-12+: +RM30/jam'],['Cuti umum','1–7 jam: RM20/jam','8 jam ke atas: RM25/jam dari jam 1']]},
- en:{title:'OT <b>Plan vs Actual</b>',sub:'Paste the roster from Excel → plan hours & RM are calculated → key in actual hours → compare.',cal:'🐎 Horse Calendar',
+ en:{title:'OT <b>Plan vs Actual</b>',sub:'Paste the roster from Excel → plan hours & RM are calculated → key in actual hours → compare.',cal:'Horse Calendar',
   h1:'1. Paste Excel roster & set the cut-off',ph:'Copy the Fieldname / Shiftcode / WorkStatus / OT rows from Excel, paste here',
-  hint1:'Copy straight from Excel (full rows are fine, ID / hidden columns included). Enter your own cut-off dates. Actual hours you type are saved in this browser.',
-  from:'Cut-off start',to:'Cut-off end',target:'OT target (hrs)',go:'Calculate',h2:'2. Calculation settings (shift times, public holidays, rates)',
+  hint1:'Copy straight from Excel (full rows are fine, ID / hidden columns included). Enter your own cut-off dates. Actual hours are saved in this browser; press Reset to clear everything.',
+  from:'Cut-off start',to:'Cut-off end',go:'Calculate',reset:'Reset',resetQ:'Tap again to clear everything',resetDone:'All data cleared.',h2:'2. Calculation settings (shift times, public holidays, rates)',
   sEnd:'Normal shift ends',oStart:'OFF-day OT starts',brk:'OFF-day break (hrs)',hint2:'Plan hours = OT end time − shift end (work day), or − OFF start − break (OFF/REST day). Hours are rounded down for pay; minimum 1 hour.',
   hol:'Public holidays (YYYY-MM-DD Name, one per line)',rt:'OT rates (Revised, MJG9–MJG14)',
   day:'Day',date:'Date',type:'Type',plan:'Plan (hrs)',planrm:'Plan RM',act:'Actual (hrs)',actrm:'Actual RM',diff:'Diff RM',total:'Total',
-  hrs:'OT hours',rm:'Ringgit (RM)',tgt:'Target',vs:'Actual vs Plan',left:'left to target',
+  hrs:'OT hours',rm:'Ringgit (RM)',tgt:'Target',vs:'Actual vs Plan',left:'remaining',
   N:'Normal',O:'OFF',P:'Public holiday',
   nodata:"No data found. Make sure the 'Fieldname' row (with dates) and the WorkStatus / OT rows are copied too.",
   done:(n,x)=>`Done: ${n} person(s) (${x}).`,legend:['Sat/Sun','OFF/REST day','Public holiday'],
@@ -230,7 +243,7 @@ function calc(P) {
 function render() {
   const out = $('out'); out.textContent = '';
   if (!PEOPLE.length) return;
-  const P = PEOPLE[CUR], rows = calc(P), tgt = +$('target').value || 0;
+  const P = PEOPLE[CUR], rows = calc(P);
   const sum = (f) => rows.reduce((s, r) => s + f(r), 0);
   const tp = sum(r => r.ph), ta = sum(r => +r.a || 0), tpp = sum(r => r.pp), tap = sum(r => r.ap);
   const dH = ta - tp, dR = tap - tpp;
@@ -238,14 +251,12 @@ function render() {
   const score = document.createElement('div'); score.className = 'score';
   score.innerHTML = `
    <div class="sc"><h3>${L.hrs}</h3><div class="big"><div><span class="lab">Plan</span><span class="v p">${fmtH(tp)}</span></div><div><span class="lab">Actual</span><span class="v">${fmtH(ta)}</span></div></div>
-     <div class="d ${dH >= 0 ? 'pos' : 'neg'}">${L.vs}: ${sign(dH)}${fmtH(dH)} h</div></div>
+     <span class="chip ${dH >= 0 ? 'pos' : 'neg'}">${L.vs}: ${sign(dH)}${fmtH(dH)} h</span><div class="bar"><i style="width:${Math.min(100, tp ? ta / tp * 100 : 0)}%"></i></div></div>
    <div class="sc"><h3>${L.rm}</h3><div class="big"><div><span class="lab">Plan</span><span class="v p">${fmtRM(tpp)}</span></div><div><span class="lab">Actual</span><span class="v">${fmtRM(tap)}</span></div></div>
-     <div class="d ${dR >= 0 ? 'pos' : 'neg'}">${L.vs}: ${dR >= 0 ? '+' : '−'}${fmtRM(Math.abs(dR))}</div></div>
-   <div class="sc"><h3>${L.tgt} ${tgt} h</h3><div class="big"><div><span class="lab">Plan</span><span class="v p">${sign(tp - tgt)}${fmtH(tp - tgt)}h</span></div><div><span class="lab">Actual</span><span class="v">${sign(ta - tgt)}${fmtH(ta - tgt)}h</span></div></div>
-     <div class="bar"><i style="width:${Math.min(100, tgt ? ta / tgt * 100 : 0)}%"></i></div><div class="lab">${fmtH(Math.max(0, tgt - ta))} h ${L.left}</div></div>`;
+     <span class="chip ${dR >= 0 ? 'pos' : 'neg'}">${L.vs}: ${dR >= 0 ? '+' : '−'}${fmtRM(Math.abs(dR))}</span><div class="bar"><i style="width:${Math.min(100, tpp ? tap / tpp * 100 : 0)}%"></i></div></div>`;
   out.append(score);
 
-  const wrap = document.createElement('div'); wrap.className = 'scroll';
+  const led = document.createElement('div'); led.className = 'ledger'; const wrap = document.createElement('div'); wrap.className = 'scroll'; led.append(wrap);
   const opt = (v, cur) => `<option value="${v}" ${v === cur ? 'selected' : ''}>${L[v]}</option>`;
   wrap.innerHTML = `<table><thead><tr><th>${L.day}</th><th>${L.date}</th><th>${L.type}</th><th class="n">${L.plan}</th><th class="n hm">${L.planrm}</th><th class="n">${L.act}</th><th class="n">${L.actrm}</th><th class="n hm">${L.diff}</th></tr></thead><tbody>${
     rows.map(r => { const cls = r.type === 'P' ? 'ph' : r.type === 'O' ? 'off' : (r.dow === 0 || r.dow === 6 ? 'we' : ''); const df = r.ap - r.pp;
@@ -255,10 +266,10 @@ function render() {
       <td class="n"><input type="number" inputmode="decimal" min="0" step="0.5" data-a="${r.k}" value="${esc(r.a)}" aria-label="Actual ${r.k}"></td>
       <td class="n">${r.a !== '' ? fmtRM(r.ap) : ''}</td><td class="n hm ${df >= 0 ? 'pos' : 'neg'} d">${r.a !== '' || r.pp ? (df >= 0 ? '+' : '−') + fmtRM(Math.abs(df)) : ''}</td></tr>`; }).join('')
   }</tbody><tfoot><tr><td colspan="3">${L.total}</td><td class="n">${fmtH(tp)}</td><td class="n hm">${fmtRM(tpp)}</td><td class="n">${fmtH(ta)}</td><td class="n">${fmtRM(tap)}</td><td class="n hm">${dR >= 0 ? '+' : '−'}${fmtRM(Math.abs(dR))}</td></tr></tfoot></table>`;
-  out.append(wrap);
+  out.append(led);
   const lg = document.createElement('div'); lg.className = 'legend';
   lg.innerHTML = [['var(--we)', L.legend[0]], ['var(--off)', L.legend[1]], ['var(--ph)', L.legend[2]]].map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join('');
-  out.append(lg);
+  led.append(lg);
 
   wrap.querySelectorAll('[data-a]').forEach(inp => inp.onchange = () => { S.set(`act:${P.name}:${inp.dataset.a}`, inp.value === '' ? '' : +inp.value); const y = scrollY; render(); scrollTo(0, y); });
   wrap.querySelectorAll('[data-t]').forEach(sel => sel.onchange = () => { S.set(`type:${P.name}:${sel.dataset.t}`, sel.value); const y = scrollY; render(); scrollTo(0, y); });
@@ -269,7 +280,7 @@ function tabs() {
 }
 function run() {
   const msg = $('msg'); msg.className = ''; msg.textContent = '';
-  ['src', 'from', 'to', 'target', 'sEnd', 'oStart', 'brk', 'hol'].forEach(id => S.set('f:' + id, $(id).value));
+  ['src', 'from', 'to', 'sEnd', 'oStart', 'brk', 'hol'].forEach(id => S.set('f:' + id, $(id).value));
   PEOPLE = parse($('src').value).filter(p => Object.keys(p.days).length);
   if (!PEOPLE.length) { msg.className = 'err'; msg.textContent = L.nodata; $('out').textContent = ''; $('tabs').textContent = ''; return; }
   if (!$('from').value || !$('to').value) {
@@ -285,14 +296,24 @@ function applyLang() {
   document.querySelectorAll('[data-i]').forEach(e => e.innerHTML = L[e.dataset.i]);
   document.querySelectorAll('[data-ph]').forEach(e => e.placeholder = L[e.dataset.ph]);
   document.querySelectorAll('[data-l]').forEach(b => b.classList.toggle('on', b.dataset.l === LANG));
-  document.querySelector('.lang a').href = './?lang=' + LANG;
+  $('navCal').href = './?lang=' + LANG;
   $('rates').innerHTML = L.r.map(r => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
   if (PEOPLE.length) run();
 }
 document.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { LANG = b.dataset.l; try { localStorage.setItem('kk-lang', LANG); } catch (e) {} applyLang(); });
-['src', 'from', 'to', 'target', 'sEnd', 'oStart', 'brk', 'hol'].forEach(id => { const v = S.get('f:' + id, null); if (v !== null) $(id).value = v; });
+['src', 'from', 'to', 'sEnd', 'oStart', 'brk', 'hol'].forEach(id => { const v = S.get('f:' + id, null); if (v !== null) $(id).value = v; });
 $('go').onclick = run;
-['from', 'to', 'target', 'sEnd', 'oStart', 'brk', 'hol'].forEach(id => $(id).addEventListener('change', () => { if (PEOPLE.length) run(); }));
+let armT = null;
+$('reset').onclick = () => {
+  const b = $('reset');
+  if (!b.classList.contains('arm')) { b.classList.add('arm'); b.textContent = L.resetQ; clearTimeout(armT); armT = setTimeout(() => { b.classList.remove('arm'); b.textContent = L.reset; }, 4000); return; }
+  clearTimeout(armT); b.classList.remove('arm'); b.textContent = L.reset;
+  try { Object.keys(localStorage).filter(k => k.startsWith('ot:')).forEach(k => localStorage.removeItem(k)); } catch (e) {}
+  $('src').value = ''; $('from').value = ''; $('to').value = '';
+  PEOPLE = []; CUR = 0; $('out').textContent = ''; $('tabs').textContent = '';
+  const m = $('msg'); m.className = ''; m.textContent = L.resetDone;
+};
+['from', 'to', 'sEnd', 'oStart', 'brk', 'hol'].forEach(id => $(id).addEventListener('change', () => { if (PEOPLE.length) run(); }));
 applyLang();
 if ($('src').value.trim()) run();
 }
