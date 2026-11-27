@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OT Plan vs Actual</title>
+<style>
+/* VOICE: practical payroll helper for shift workers, clear and trustworthy
+   IDEA: the team's own Excel OT sheet (Day | Date | Plan | RM) brought to life with an Actual column
+   PICTURE: the summary scoreboard (Plan vs Actual hours & RM) above a ledger-style day table
+   COLOUR and TYPE: navy #012056, red #c8101e accent, yellow #ffd21a highlights; system sans, tabular numbers
+   LAYOUT: one column: paste -> cut-off & settings -> person tabs -> scoreboard -> day table */
+:root{color-scheme:light dark;--bg:light-dark(#f3f5fa,#0b1222);--card:light-dark(#fff,#131c33);--ink:light-dark(#101418,#e8ecf5);--mute:light-dark(#5a6372,#9aa6bd);--line:light-dark(#d5dae4,#27365a);--navy:#012056;--red:#c8101e;--yel:#ffd21a;--we:light-dark(#dfe6f7,#1b2a4d);--off:light-dark(#fde7ea,#3a1d27);--ph:light-dark(#fff3c4,#3b3315);--ok:#14833b;--bad:#c8101e}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:clip}
+header{background:var(--navy);color:#fff;padding:18px max(5vw,16px);border-bottom:5px solid var(--red)}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+header h1{margin:0;font-size:clamp(24px,5vw,36px);line-height:1.1;font-weight:900}header h1 b{color:var(--yel)}
+header p{margin:6px 0 0;color:#c9d4ee;font-size:15px}
+.lang{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.lang button{min-height:40px;padding:0 14px;color:#fff;background:transparent;border:1px solid #4a5d8f}
+.lang button.on{background:var(--yel);color:#111;border-color:var(--yel)}
+.lang a{color:#012056;background:#fff;font-weight:800;text-decoration:none;padding:9px 14px;border-radius:10px}
+main{max-width:1240px;margin:0 auto;padding:20px max(4vw,12px) 60px;display:grid;gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h2{margin:0 0 8px;font-size:19px}
+textarea{width:100%;min-height:130px;font:14px/1.4 Consolas,monospace;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);white-space:pre;overflow:auto}
+.hint{color:var(--mute);font-size:14px;margin:6px 0 0}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-top:12px}
+button{font:inherit;font-weight:700;min-height:44px;padding:0 18px;border-radius:10px;border:0;cursor:pointer;background:var(--red);color:#fff}
+button.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--yel);outline-offset:2px}
+label.f{display:grid;gap:4px;font-size:14px;color:var(--mute)}
+input,select{font:16px system-ui;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-height:42px}
+input[type=number]{width:96px}
+#msg{font-weight:600;margin:0}#msg.err{color:#e0323f}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tabs button{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px}
+.sc{border-radius:14px;padding:14px 16px;background:var(--card);border:1px solid var(--line)}
+.sc h3{margin:0 0 6px;font-size:14px;color:var(--mute);font-weight:700}
+.sc .big{display:flex;gap:18px;align-items:baseline;flex-wrap:wrap}
+.sc .big div{display:grid}
+.sc .lab{font-size:13px;color:var(--mute)}
+.sc .v{font-size:clamp(26px,4vw,34px);font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sc .v.p{color:var(--navy)}:root[data-theme=dark] .sc .v.p{color:#8fb3ff}
+.d{font-weight:800;white-space:nowrap}.d.pos{color:var(--ok)}.d.neg{color:var(--bad)}
+.bar{height:10px;border-radius:5px;background:var(--line);overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--navy),var(--red))}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:15px}
+th{background:var(--navy);color:#fff;font-weight:700;padding:9px 8px;text-align:left;position:sticky;top:0}
+th.n,td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td{padding:6px 8px;border-top:1px solid var(--line)}
+tr.we td{background:var(--we)}tr.off td{background:var(--off)}tr.ph td{background:var(--ph)}
+td input[type=number]{width:84px;min-height:38px;text-align:right}
+td select{min-height:38px;padding:4px 6px}
+tfoot td{font-weight:900;background:var(--yel);color:#111;border-top:2px solid #111}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;color:var(--mute);margin-top:8px}
+.legend span{display:inline-flex;gap:6px;align-items:center}.legend i{width:14px;height:14px;border-radius:4px;display:inline-block;border:1px solid var(--line)}
+details summary{cursor:pointer;font-weight:700}
+.rates{font-size:14px}.rates td{padding:4px 8px}
+.ds{display:none}
+@media(max-width:600px){table{font-size:13px;min-width:0}td,th{padding:6px 4px}td input[type=number]{width:56px;padding:6px}td select{width:74px;font-size:13px}.hm{display:none}.dl{display:none}.ds{display:inline}th{font-size:12px}}
+@media print{header .lang,.card.in,#tabs{display:none}body{background:#fff}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><h1 data-i="title"></h1>
+    <div class="lang"><button data-l="ms">BM</button><button data-l="en">EN</button><a href="./" data-i="cal"></a></div></div>
+  <p data-i="sub"></p>
+</header>
+<main>
+  <section class="card in">
+    <h2 data-i="h1"></h2>
+    <textarea id="src" spellcheck="false" data-ph="ph"></textarea>
+    <p class="hint" data-i="hint1"></p>
+    <div class="row">
+      <label class="f"><span data-i="from"></span><input type="date" id="from"></label>
+      <label class="f"><span data-i="to"></span><input type="date" id="to"></label>
+      <label class="f"><span data-i="target"></span><input type="number" id="target" min="0" step="1" value="50"></label>
+      <button id="go" data-i="go"></button>
+    </div>
+  </section>
+
+  <section class="card in">
+    <details>
+      <summary data-i="h2"></summary>
+      <div class="row">
+        <label class="f"><span data-i="sEnd"></span><input type="time" id="sEnd" value="17:00"></label>
+        <label class="f"><span data-i="oStart"></span><input type="time" id="oStart" value="08:00"></label>
+        <label class="f"><span data-i="brk"></span><input type="number" id="brk" min="0" step="0.5" value="1"></label>
+      </div>
+      <p class="hint" data-i="hint2"></p>
+      <label class="f" style="margin-top:10px"><span data-i="hol"></span>
+        <textarea id="hol" style="min-height:80px">2026-12-11 Sultan's Birthday
+2026-12-25 Christmas</textarea></label>
+      <h3 style="margin:14px 0 6px;font-size:15px" data-i="rt"></h3>
+      <div class="scroll"><table class="rates" style="min-width:0"><tbody id="rates"></tbody></table></div>
+    </details>
+  </section>
+
+  <p id="msg" aria-live="polite"></p>
+  <div class="tabs" id="tabs"></div>
+  <section id="out" style="display:grid;gap:14px"></section>
+</main>
+
+<script>
+{
+const $ = id => document.getElementById(id);
+const T = {
+ ms:{title:'OT <b>Plan vs Actual</b>',sub:'Paste jadual dari Excel → jam & RM plan dikira sendiri → isi jam actual → banding.',cal:'🐎 Kalendar Kuda',
+  h1:'1. Paste jadual Excel & pilih cut-off',ph:'Copy baris Fieldname / Shiftcode / WorkStatus / OT dari Excel, paste di sini',
+  hint1:'Copy terus dari Excel (boleh penuh, termasuk ID / lajur tersembunyi). Isi tarikh cut-off sendiri. Jam actual yang anda taip disimpan dalam browser ini.',
+  from:'Cut-off mula',to:'Cut-off tamat',target:'Sasaran OT (jam)',go:'Kira',h2:'2. Tetapan kiraan (waktu shift, cuti umum, kadar)',
+  sEnd:'Shift biasa tamat',oStart:'OT hari OFF mula',brk:'Rehat hari OFF (jam)',hint2:'Jam plan = masa tamat OT − tamat shift (hari kerja), atau − mula OFF − rehat (hari OFF/REST). Jam dibundarkan ke bawah untuk bayaran; minimum 1 jam.',
+  hol:'Cuti umum (YYYY-MM-DD Nama, satu baris)',rt:'Kadar OT (Revised, MJG9–MJG14)',
+  day:'Hari',date:'Tarikh',type:'Jenis',plan:'Plan (jam)',planrm:'Plan RM',act:'Actual (jam)',actrm:'Actual RM',diff:'Beza RM',total:'Jumlah',
+  hrs:'Jam OT',rm:'Ringgit (RM)',tgt:'Sasaran',vs:'Actual vs Plan',left:'baki ke sasaran',
+  N:'Biasa',O:'OFF',P:'Cuti Umum',
+  nodata:"Tiada data dijumpai. Pastikan baris 'Fieldname' (dengan tarikh) dan baris WorkStatus / OT turut di-copy.",
+  done:(n,x)=>`Siap: ${n} orang (${x}).`,legend:['Sabtu/Ahad','Hari OFF/REST','Cuti umum'],
+  days:['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'],
+  r:[['Hari biasa','Jam 1–2: RM10/jam','Jam ke-3 ke atas: RM30/jam'],['Hari OFF','1–7 jam: RM10/jam','8–10 jam: RM12.50/jam dari jam 1; 11 jam: RM200; jam ke-12+: +RM30/jam'],['Cuti umum','1–7 jam: RM20/jam','8 jam ke atas: RM25/jam dari jam 1']]},
+ en:{title:'OT <b>Plan vs Actual</b>',sub:'Paste the roster from Excel → plan hours & RM are calculated → key in actual hours → compare.',cal:'🐎 Horse Calendar',
+  h1:'1. Paste Excel roster & set the cut-off',ph:'Copy the Fieldname / Shiftcode / WorkStatus / OT rows from Excel, paste here',
+  hint1:'Copy straight from Excel (full rows are fine, ID / hidden columns included). Enter your own cut-off dates. Actual hours you type are saved in this browser.',
+  from:'Cut-off start',to:'Cut-off end',target:'OT target (hrs)',go:'Calculate',h2:'2. Calculation settings (shift times, public holidays, rates)',
+  sEnd:'Normal shift ends',oStart:'OFF-day OT starts',brk:'OFF-day break (hrs)',hint2:'Plan hours = OT end time − shift end (work day), or − OFF start − break (OFF/REST day). Hours are rounded down for pay; minimum 1 hour.',
+  hol:'Public holidays (YYYY-MM-DD Name, one per line)',rt:'OT rates (Revised, MJG9–MJG14)',
+  day:'Day',date:'Date',type:'Type',plan:'Plan (hrs)',planrm:'Plan RM',act:'Actual (hrs)',actrm:'Actual RM',diff:'Diff RM',total:'Total',
+  hrs:'OT hours',rm:'Ringgit (RM)',tgt:'Target',vs:'Actual vs Plan',left:'left to target',
+  N:'Normal',O:'OFF',P:'Public holiday',
+  nodata:"No data found. Make sure the 'Fieldname' row (with dates) and the WorkStatus / OT rows are copied too.",
+  done:(n,x)=>`Done: ${n} person(s) (${x}).`,legend:['Sat/Sun','OFF/REST day','Public holiday'],
+  days:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+  r:[['Normal day','Hours 1–2: RM10/hr','From the 3rd hour: RM30/hr'],['OFF day','1–7 hrs: RM10/hr','8–10 hrs: RM12.50/hr from hour 1; 11 hrs: RM200; 12th hr+: +RM30/hr'],['Public holiday','1–7 hrs: RM20/hr','8 hrs and above: RM25/hr from hour 1']]}
+};
+let LANG='ms'; try{LANG=new URLSearchParams(location.search).get('lang')||localStorage.getItem('kk-lang')||'ms'}catch(e){} if(!T[LANG])LANG='ms';
+let L=T[LANG];
+
+// ---------- pay rules (Revised OT allowance MJG9–MJG14) ----------
+function pay(type, hrs) {
+  const h = Math.floor(+hrs || 0);
+  if (h < 1) return 0;
+  if (type === 'P') return h <= 7 ? 20 * h : 25 * h;
+  if (type === 'O') { if (h <= 7) return 10 * h; if (h <= 10) return 12.5 * h; return 200 + 30 * (h - 11); }
+  return h <= 2 ? 10 * h : 20 + 30 * (h - 2);
+}
+
+// ---------- roster parser (same as Kalendar Kuda) ----------
+function parse(text) {
+  const blocks = [];
+  for (const raw of text.split(/\r?\n/)) {
+    if (!raw.trim()) continue;
+    let c = (raw.includes("\t") ? raw.split("\t") : raw.trim().split(/\s{2,}/)).map(v => (v || "").trim());
+    const KEYS = ["fieldname", "shiftcode", "workstatus", "ot"], norm = v => (v || "").toLowerCase().replace(/\s+/g, "");
+    const ki = c.findIndex((v, i) => i < 8 && KEYS.includes(norm(v)));
+    if (ki < 0) continue;
+    c = c.slice(ki); const key = norm(c[0]);
+    if (key === "fieldname") {
+      const dates = {}; let nameCol = -1;
+      c.forEach((v, i) => { const m = v.match(/(\d{4})-(\d{1,2})-(\d{1,2})/); if (m) dates[i] = iso(+m[1], +m[2] - 1, +m[3]); else if (/^name$/i.test(v) && nameCol < 0) nameCol = i; });
+      if (Object.keys(dates).length) blocks.push({c, dates, nameCol, rows: []});
+      continue;
+    }
+    if (blocks.length && key !== "fieldname") blocks[blocks.length - 1].rows.push({key, c});
+  }
+  const people = {}, order = []; let lastName = "";
+  for (const B of blocks) {
+    const idx = Object.keys(B.dates).map(Number), d0 = Math.min(...idx);
+    const ws = B.rows.find(r => r.key === "workstatus");
+    const lenOff = B.rows.length ? Math.max(0, B.rows[0].c.length - B.c.length) : 0;
+    let off = lenOff;
+    if (ws) { let best = -1; for (let o = 0; o <= 6; o++) { let sc = 0; for (const i of idx) if (/^[A-Za-z]{1,3}$/.test(ws.c[i + o] || "")) sc++; if (sc > best || (sc === best && o === lenOff)) { best = sc; off = o; } } }
+    const nameOf = c => { if (B.nameCol >= 0) { const v = c[B.nameCol + off] || ""; if (v && !/^\d+$/.test(v)) return v; } for (let i = 1; i < d0 + off; i++) { const v = c[i] || ""; if (v && !/^[\d.]+$/.test(v)) return v; } return ""; };
+    let bName = ""; for (const R of B.rows) { const n = nameOf(R.c); if (n) { bName = n; break; } }
+    for (const R of B.rows) {
+      const nm = nameOf(R.c) || bName || lastName; if (!nm) continue; lastName = nm;
+      if (!people[nm]) { people[nm] = {name: nm, days: {}}; order.push(nm); }
+      for (const [i, k] of Object.entries(B.dates)) {
+        const v = R.c[+i + off] || ""; const D = people[nm].days[k] || (people[nm].days[k] = {ws: "", shift: "", ot: ""});
+        if (R.key === "workstatus") D.ws = v.toUpperCase(); else if (R.key === "shiftcode") D.shift = v.toUpperCase();
+        else D.ot = /^\d{1,2}[:.]\d{2}$/.test(v) ? v.replace(".", ":").padStart(5, "0") : "";
+      }
+    }
+  }
+  return order.map(n => people[n]);
+}
+function iso(y, m, d) { return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`; }
+const mins = t => { const [h, m] = (t || '0:0').split(':').map(Number); return h * 60 + m; };
+const isOff = D => D && (D.ws === 'O' || D.ws === 'R' || D.shift === 'OFF' || D.shift === 'REST');
+function planHours(D) {
+  if (!D || !D.ot) return 0;
+  const end = mins(D.ot);
+  let h = isOff(D) ? (end - mins($('oStart').value)) / 60 - (+$('brk').value || 0) : (end - mins($('sEnd').value)) / 60;
+  return Math.max(0, Math.round(h * 100) / 100);
+}
+function holidays() { const h = {}; for (const l of $('hol').value.split(/\r?\n/)) { const m = l.match(/(\d{4})-(\d{1,2})-(\d{1,2})\s*(.*)/); if (m) h[iso(+m[1], +m[2] - 1, +m[3])] = m[4].trim(); } return h; }
+
+// ---------- storage (per viewer browser) ----------
+const S = { get(k, d) { try { const v = localStorage.getItem('ot:' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+            set(k, v) { try { localStorage.setItem('ot:' + k, JSON.stringify(v)); } catch (e) {} } };
+
+const fmtRM = v => 'RM' + (Math.round(v * 100) / 100).toLocaleString('en-MY', {minimumFractionDigits: 0, maximumFractionDigits: 2});
+const fmtH = v => (Math.round(v * 100) / 100).toString();
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+let PEOPLE = [], CUR = 0;
+
+function dateList() {
+  const a = $('from').value, b = $('to').value; if (!a || !b) return [];
+  const out = []; let d = new Date(a + 'T12:00'); const e = new Date(b + 'T12:00');
+  while (d <= e && out.length < 62) { out.push(iso(d.getFullYear(), d.getMonth(), d.getDate())); d.setDate(d.getDate() + 1); }
+  return out;
+}
+function calc(P) {
+  const hol = holidays(), rows = [];
+  for (const k of dateList()) {
+    const D = P.days[k], dow = new Date(k + 'T12:00').getDay();
+    const autoType = hol[k] !== undefined ? 'P' : isOff(D) ? 'O' : 'N';
+    const type = S.get(`type:${P.name}:${k}`, autoType);
+    const ph = planHours(D);
+    const a = S.get(`act:${P.name}:${k}`, '');
+    rows.push({k, dow, D, type, autoType, ph, pp: pay(type, ph), a, ap: a === '' ? 0 : pay(type, a), hol: hol[k]});
+  }
+  return rows;
+}
+function render() {
+  const out = $('out'); out.textContent = '';
+  if (!PEOPLE.length) return;
+  const P = PEOPLE[CUR], rows = calc(P), tgt = +$('target').value || 0;
+  const sum = (f) => rows.reduce((s, r) => s + f(r), 0);
+  const tp = sum(r => r.ph), ta = sum(r => +r.a || 0), tpp = sum(r => r.pp), tap = sum(r => r.ap);
+  const dH = ta - tp, dR = tap - tpp;
+  const sign = v => (v > 0 ? '+' : '') ;
+  const score = document.createElement('div'); score.className = 'score';
+  score.innerHTML = `
+   <div class="sc"><h3>${L.hrs}</h3><div class="big"><div><span class="lab">Plan</span><span class="v p">${fmtH(tp)}</span></div><div><span class="lab">Actual</span><span class="v">${fmtH(ta)}</span></div></div>
+     <div class="d ${dH >= 0 ? 'pos' : 'neg'}">${L.vs}: ${sign(dH)}${fmtH(dH)} h</div></div>
+   <div class="sc"><h3>${L.rm}</h3><div class="big"><div><span class="lab">Plan</span><span class="v p">${fmtRM(tpp)}</span></div><div><span class="lab">Actual</span><span class="v">${fmtRM(tap)}</span></div></div>
+     <div class="d ${dR >= 0 ? 'pos' : 'neg'}">${L.vs}: ${dR >= 0 ? '+' : '−'}${fmtRM(Math.abs(dR))}</div></div>
+   <div class="sc"><h3>${L.tgt} ${tgt} h</h3><div class="big"><div><span class="lab">Plan</span><span class="v p">${sign(tp - tgt)}${fmtH(tp - tgt)}h</span></div><div><span class="lab">Actual</span><span class="v">${sign(ta - tgt)}${fmtH(ta - tgt)}h</span></div></div>
+     <div class="bar"><i style="width:${Math.min(100, tgt ? ta / tgt * 100 : 0)}%"></i></div><div class="lab">${fmtH(Math.max(0, tgt - ta))} h ${L.left}</div></div>`;
+  out.append(score);
+
+  const wrap = document.createElement('div'); wrap.className = 'scroll';
+  const opt = (v, cur) => `<option value="${v}" ${v === cur ? 'selected' : ''}>${L[v]}</option>`;
+  wrap.innerHTML = `<table><thead><tr><th>${L.day}</th><th>${L.date}</th><th>${L.type}</th><th class="n">${L.plan}</th><th class="n hm">${L.planrm}</th><th class="n">${L.act}</th><th class="n">${L.actrm}</th><th class="n hm">${L.diff}</th></tr></thead><tbody>${
+    rows.map(r => { const cls = r.type === 'P' ? 'ph' : r.type === 'O' ? 'off' : (r.dow === 0 || r.dow === 6 ? 'we' : ''); const df = r.ap - r.pp;
+      return `<tr class="${cls}"><td><span class="dl">${L.days[r.dow]}${r.hol ? ' · ' + esc(r.hol) : ''}</span><span class="ds">${L.days[r.dow].slice(0,3)}</span></td><td class="n">${r.k.slice(8)}/${r.k.slice(5, 7)}</td>
+      <td><select data-t="${r.k}">${opt('N', r.type)}${opt('O', r.type)}${opt('P', r.type)}</select></td>
+      <td class="n">${r.ph ? fmtH(r.ph) + (r.D && r.D.ot ? ` <small style="color:var(--mute)">(${r.D.ot})</small>` : '') : ''}</td><td class="n hm">${r.pp ? fmtRM(r.pp) : ''}</td>
+      <td class="n"><input type="number" inputmode="decimal" min="0" step="0.5" data-a="${r.k}" value="${esc(r.a)}" aria-label="Actual ${r.k}"></td>
+      <td class="n">${r.a !== '' ? fmtRM(r.ap) : ''}</td><td class="n hm ${df >= 0 ? 'pos' : 'neg'} d">${r.a !== '' || r.pp ? (df >= 0 ? '+' : '−') + fmtRM(Math.abs(df)) : ''}</td></tr>`; }).join('')
+  }</tbody><tfoot><tr><td colspan="3">${L.total}</td><td class="n">${fmtH(tp)}</td><td class="n hm">${fmtRM(tpp)}</td><td class="n">${fmtH(ta)}</td><td class="n">${fmtRM(tap)}</td><td class="n hm">${dR >= 0 ? '+' : '−'}${fmtRM(Math.abs(dR))}</td></tr></tfoot></table>`;
+  out.append(wrap);
+  const lg = document.createElement('div'); lg.className = 'legend';
+  lg.innerHTML = [['var(--we)', L.legend[0]], ['var(--off)', L.legend[1]], ['var(--ph)', L.legend[2]]].map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join('');
+  out.append(lg);
+
+  wrap.querySelectorAll('[data-a]').forEach(inp => inp.onchange = () => { S.set(`act:${P.name}:${inp.dataset.a}`, inp.value === '' ? '' : +inp.value); const y = scrollY; render(); scrollTo(0, y); });
+  wrap.querySelectorAll('[data-t]').forEach(sel => sel.onchange = () => { S.set(`type:${P.name}:${sel.dataset.t}`, sel.value); const y = scrollY; render(); scrollTo(0, y); });
+}
+function tabs() {
+  const t = $('tabs'); t.innerHTML = PEOPLE.length > 1 ? PEOPLE.map((p, i) => `<button class="${i === CUR ? 'on' : ''}" data-i2="${i}">${esc(p.name)}</button>`).join('') : '';
+  t.querySelectorAll('button').forEach(b => b.onclick = () => { CUR = +b.dataset.i2; tabs(); render(); });
+}
+function run() {
+  const msg = $('msg'); msg.className = ''; msg.textContent = '';
+  ['src', 'from', 'to', 'target', 'sEnd', 'oStart', 'brk', 'hol'].forEach(id => S.set('f:' + id, $(id).value));
+  PEOPLE = parse($('src').value).filter(p => Object.keys(p.days).length);
+  if (!PEOPLE.length) { msg.className = 'err'; msg.textContent = L.nodata; $('out').textContent = ''; $('tabs').textContent = ''; return; }
+  if (!$('from').value || !$('to').value) {
+    const all = PEOPLE.flatMap(p => Object.keys(p.days)).sort();
+    if (!$('from').value) $('from').value = all[0]; if (!$('to').value) $('to').value = all[all.length - 1];
+  }
+  if (CUR >= PEOPLE.length) CUR = 0;
+  msg.textContent = L.done(PEOPLE.length, PEOPLE.map(p => p.name).join(', '));
+  tabs(); render();
+}
+function applyLang() {
+  L = T[LANG]; document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-i]').forEach(e => e.innerHTML = L[e.dataset.i]);
+  document.querySelectorAll('[data-ph]').forEach(e => e.placeholder = L[e.dataset.ph]);
+  document.querySelectorAll('[data-l]').forEach(b => b.classList.toggle('on', b.dataset.l === LANG));
+  document.querySelector('.lang a').href = './?lang=' + LANG;
+  $('rates').innerHTML = L.r.map(r => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+  if (PEOPLE.length) run();
+}
+document.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { LANG = b.dataset.l; try { localStorage.setItem('kk-lang', LANG); } catch (e) {} applyLang(); });
+['src', 'from', 'to', 'target', 'sEnd', 'oStart', 'brk', 'hol'].forEach(id => { const v = S.get('f:' + id, null); if (v !== null) $(id).value = v; });
+$('go').onclick = run;
+['from', 'to', 'target', 'sEnd', 'oStart', 'brk', 'hol'].forEach(id => $(id).addEventListener('change', () => { if (PEOPLE.length) run(); }));
+applyLang();
+if ($('src').value.trim()) run();
+}
+</script>
+</body>
+</html>
