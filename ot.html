@@ -3,59 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OT Plan vs Actual</title>
+<title>Plan vs Actual · OT Hub</title>
+<link rel="stylesheet" href="hub.css">
 <style>
-/* VOICE: practical payroll helper for shift workers, calm and modern
-   IDEA: the team's Excel OT sheet turned into a clean app: scoreboard on top, ledger below
-   PICTURE: two scoreboard cards (Hours, Ringgit) with Plan vs Actual and a delta chip, above the day ledger
-   COLOUR and TYPE: deep navy to royal blue header, red accent, yellow highlights; Plus Jakarta Sans, tabular numbers
-   LAYOUT: segmented nav in header -> paste card -> settings -> person tabs -> scoreboard -> ledger */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-:root{color-scheme:light dark;--bg:light-dark(#f1f5f9,#0b1120);--card:light-dark(#ffffff,#121a30);--ink:light-dark(#0f172a,#e6ecf8);--mute:light-dark(#64748b,#93a1bd);--line:light-dark(#e3e8f2,#223056);--soft:light-dark(#f5f7fc,#0f1730);--navy:#1e293b;--blue:#4f46e5;--red:#4f46e5;--yel:#c7d2fe;--ok:#059669;--bad:#dc2626;--we:light-dark(#f8fafc,#111a2e);--off:light-dark(#f5f3ff,#1a1838);--ph:light-dark(#fffbeb,#2a2512);--sh:0 1px 2px #0f172a0d,0 8px 24px #0f172a14}
-:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
-*{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:clip}
-header{background:radial-gradient(700px 260px at 85% -30%,#6366f155,transparent 60%),#1e293b;color:#fff;padding:22px max(5vw,16px) 64px}
-.top{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;max-width:1240px;margin:0 auto}
-header h1{margin:0;font-size:clamp(26px,5vw,40px);line-height:1.05;font-weight:800}header h1 b{color:#a5b4fc}
-header p{margin:8px auto 0;color:#c7d4f5;font-size:15px;max-width:1240px}
-.nav{display:flex;gap:4px;padding:4px;border-radius:999px;background:#ffffff1f}
-.nav a{color:#dbe5ff;text-decoration:none;font-weight:700;font-size:14px;padding:9px 16px;border-radius:999px;white-space:nowrap}
-.nav a.on{background:#fff;color:var(--navy)}
-.lang{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.lang button{min-height:38px;padding:0 12px;border-radius:999px;color:#fff;background:transparent;border:1px solid #ffffff55;font-size:14px;box-shadow:none}
-.lang button.on{background:#fff;color:#1e293b;border-color:#fff}
-main{max-width:1240px;margin:-44px auto 0;padding:0 max(4vw,12px) 60px;display:grid;gap:16px}
-.card{background:var(--card);border-radius:20px;padding:18px 20px;box-shadow:var(--sh)}
-.card h2{margin:0 0 10px;font-size:18px;font-weight:800}
-textarea{width:100%;min-height:120px;font:13px/1.45 Consolas,ui-monospace,monospace;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--soft);color:var(--ink);white-space:pre;overflow:auto}
-.hint{color:var(--mute);font-size:14px;margin:8px 0 0}
-.row{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin-top:14px}
-button{font:inherit;font-weight:700;min-height:44px;padding:0 20px;border-radius:12px;border:0;cursor:pointer;background:var(--red);color:#fff;box-shadow:0 6px 16px #4f46e533}
-button.alt{background:var(--soft);color:var(--ink);border:1px solid var(--line);box-shadow:none}
-button.warn{background:var(--soft);color:var(--bad);border:1px solid #dc262655;box-shadow:none}
-button.warn.arm{background:var(--bad);color:#fff}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--yel);outline-offset:2px}
-label.f{display:grid;gap:4px;font-size:13px;font-weight:600;color:var(--mute)}
-input,select{font:16px "Plus Jakarta Sans",system-ui;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--soft);color:var(--ink);min-height:44px}
 input[type=number]{width:96px}
-#msg{font-weight:700;margin:0;font-size:14px;color:var(--ok)}#msg.err{color:var(--bad)}
 .tabs{display:flex;gap:8px;flex-wrap:wrap}
-.tabs button{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:none;border-radius:999px}
-.tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tabs button{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:none;border-radius:8px}
+.tabs button.on{background:var(--pri);color:var(--priInk);border-color:var(--pri)}
 .score{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
-.sc{border-radius:20px;padding:18px 20px 18px 24px;background:var(--card);box-shadow:var(--sh);position:relative;overflow:hidden}
+.sc{border-radius:var(--r);border:1px solid var(--line);padding:18px 20px 18px 24px;background:var(--card);box-shadow:var(--sh);position:relative;overflow:hidden}
 .sc::before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:var(--blue)}
 .sc h3{margin:0 0 10px;font-size:14px;color:var(--mute);font-weight:700}
 .sc .big{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .sc .big div{display:grid}
 .sc .lab{font-size:13px;color:var(--mute);font-weight:600}
 .sc .v{font-size:clamp(28px,4.4vw,40px);font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.1}
-.sc .v.p{color:var(--blue)}:root[data-theme=dark] .sc .v.p{color:#8fb3ff}
+.sc .v.p{color:var(--pri)}
 .chip{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:5px 12px;border-radius:999px;font-weight:800;font-size:14px;white-space:nowrap}
 .chip.pos{background:#05966918;color:var(--ok)}.chip.neg{background:#dc262614;color:var(--bad)}
 .bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;border-radius:4px;background:var(--blue)}
-.ledger{background:var(--card);border-radius:20px;box-shadow:var(--sh);overflow:hidden}
+.ledger{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
 .scroll{overflow-x:auto}
 table{border-collapse:collapse;width:100%;min-width:720px;font-size:15px}
 th{background:var(--soft);color:var(--mute);font-weight:700;font-size:13px;padding:12px 10px;text-align:left;border-bottom:1px solid var(--line)}
@@ -64,27 +31,21 @@ td{padding:7px 10px;border-bottom:1px solid var(--line)}
 tr.we td{background:var(--we)}tr.off td{background:var(--off)}tr.ph td{background:var(--ph)}
 td input[type=number]{width:84px;min-height:38px;text-align:right;padding:6px 10px;background:var(--card)}
 td select{min-height:36px;padding:4px 10px;border-radius:999px;font-size:14px;font-weight:600;background:var(--card)}
-tr.off td select{border-color:#a5b4fc;color:#4338ca}tr.ph td select{border-color:#fcd34d;color:#92400e}
+tr.off td select{border-color:var(--pri);color:var(--pri)}tr.ph td select{border-color:#fcd34d;color:#92400e}
 :root[data-theme=dark] tr.off td select{color:#c7d2fe}:root[data-theme=dark] tr.ph td select{color:#fde68a}
 td.d.pos{color:var(--ok);font-weight:800}td.d.neg{color:var(--bad);font-weight:800}
-tfoot td{font-weight:800;background:var(--navy);color:#fff;border:0;padding:12px 10px}
-tfoot td.n{color:#c7d2fe}
+tfoot td{font-weight:700;background:var(--soft);color:var(--ink);border-top:2px solid var(--line);padding:12px 10px}
+tfoot td.n{color:var(--pri)}
 .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--mute);padding:12px 16px}
 .legend span{display:inline-flex;gap:6px;align-items:center}.legend i{width:14px;height:14px;border-radius:4px;display:inline-block;border:1px solid var(--line)}
-details summary{cursor:pointer;font-weight:800}
 .rates{font-size:14px;min-width:0}.rates td{padding:6px 10px}
 .ds{display:none}
 @media(max-width:600px){table{font-size:13px;min-width:0}td,th{padding:6px 4px}td input[type=number]{width:56px;padding:6px}td select{width:76px;font-size:12px;padding:4px 6px}.hm{display:none}.dl{display:none}.ds{display:inline}th{font-size:12px}.nav a{padding:8px 12px;font-size:13px}}
-@media print{header .nav,header .lang,.card.in,#tabs{display:none}body{background:#fff}}
+@media print{.card.in,#tabs{display:none}body{background:#fff}}
 </style>
 </head>
-<body>
-<header>
-  <div class="top"><h1 data-i="title"></h1>
-    <nav class="nav" aria-label="Pages"><a href="./">🗓️ Planning Board</a><a href="calendar.html" id="navCal">🐎 <span data-i="cal"></span></a><a href="ot.html" class="on" aria-current="page">📊 Plan vs Actual</a></nav>
-    <div class="lang"><button data-l="ms">BM</button><button data-l="en">EN</button></div></div>
-  <p data-i="sub"></p>
-</header>
+<body data-page="plan" data-help="guide.html#plan">
+<header id="hub"></header><script src="hub.js"></script>
 <main>
   <section class="card in">
     <h2 data-i="h1"></h2>
@@ -151,7 +112,7 @@ const T = {
   days:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
   r:[['Normal day','Hours 1–2: RM10/hr','From the 3rd hour: RM30/hr'],['OFF day','1–7 hrs: RM10/hr','8–10 hrs: RM12.50/hr from hour 1; 11 hrs: RM200; 12th hr+: +RM30/hr'],['Public holiday','1–7 hrs: RM20/hr','8 hrs and above: RM25/hr from hour 1']]}
 };
-let LANG='ms'; try{LANG=new URLSearchParams(location.search).get('lang')||localStorage.getItem('kk-lang')||'ms'}catch(e){} if(!T[LANG])LANG='ms';
+let LANG='ms'; try{LANG=new URLSearchParams(location.search).get('lang')||localStorage.getItem('kk-lang')||'en'}catch(e){} if(!T[LANG])LANG='en';
 let L=T[LANG];
 
 // ---------- pay rules (Revised OT allowance MJG9–MJG14) ----------
@@ -296,7 +257,6 @@ function applyLang() {
   document.querySelectorAll('[data-i]').forEach(e => e.innerHTML = L[e.dataset.i]);
   document.querySelectorAll('[data-ph]').forEach(e => e.placeholder = L[e.dataset.ph]);
   document.querySelectorAll('[data-l]').forEach(b => b.classList.toggle('on', b.dataset.l === LANG));
-  $('navCal').href = 'calendar.html?lang=' + LANG;
   $('rates').innerHTML = L.r.map(r => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
   if (PEOPLE.length) run();
 }

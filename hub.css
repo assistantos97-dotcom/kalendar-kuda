@@ -1,0 +1,83 @@
+/* OT Hub shared design system: one look for every page.
+   Industrial, calm, high contrast. Light + dark themes via [data-theme] on <html>. */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+:root{
+  color-scheme:light;
+  --bg:#f3f5f8;--card:#ffffff;--soft:#f7f9fb;--ink:#14202e;--mute:#5a6676;--line:#dbe1e8;--line2:#c9d1db;
+  --pri:#1d4f91;--priInk:#ffffff;--priSoft:#e7eef8;
+  --bar:#0f2742;--barInk:#dfe7f1;--barMute:#9fb1c7;--accent:#f2b705;
+  --ok:#0f7a4a;--bad:#c0262d;--warn:#a15c00;
+  --ot:#f6c90e;--otInk:#2b2400;
+  --we:#eef1f5;--off:#eef2fb;--ph:#fdecee;--phInk:#b4232c;
+  --navy:#0f2742;--blue:#1d4f91;--red:#1d4f91;--yel:#f2b705;
+  --sh:0 1px 2px rgba(16,24,40,.06);
+  --r:10px;
+  --font:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",Consolas,ui-monospace,monospace;
+}
+:root[data-theme=dark]{
+  color-scheme:dark;
+  --bg:#0d131a;--card:#141c26;--soft:#18222e;--ink:#e4eaf1;--mute:#93a1b2;--line:#253242;--line2:#30405330;
+  --pri:#5b93db;--priInk:#08121e;--priSoft:#1a2a3e;
+  --bar:#0a1622;--barInk:#dfe7f1;--barMute:#8094aa;
+  --ok:#3fbf7f;--bad:#f0666c;--warn:#e3a33b;
+  --ot:#e8bd1a;--otInk:#1f1a00;
+  --we:#18212c;--off:#172236;--ph:#2c1a1f;--phInk:#ff8a90;
+  --navy:#0a1622;--blue:#5b93db;--red:#5b93db;
+  --sh:none;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--font)}
+a{color:var(--pri)}
+
+/* ---------- top bar ---------- */
+.hub-bar{background:var(--bar);color:var(--barInk);border-bottom:3px solid var(--accent)}
+.hub-in{max-width:1400px;margin:0 auto;padding:0 max(2vw,14px);display:flex;align-items:center;gap:18px;min-height:60px;flex-wrap:wrap}
+.hub-brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;margin-right:6px}
+.hub-logo{width:30px;height:30px;border-radius:6px;background:var(--accent);color:#0f2742;display:grid;place-items:center;font:700 13px var(--font);letter-spacing:-.5px}
+.hub-name{font-weight:700;font-size:17px;line-height:1.1}
+.hub-name small{display:block;font-weight:500;font-size:11px;color:var(--barMute);letter-spacing:.06em;text-transform:uppercase}
+.hub-nav{display:flex;gap:2px;flex-wrap:wrap;flex:1}
+.hub-nav a{color:var(--barInk);text-decoration:none;font-weight:600;font-size:14px;padding:19px 14px 16px;border-bottom:3px solid transparent;margin-bottom:-3px;white-space:nowrap}
+.hub-nav a:hover{color:#fff;background:#ffffff0d}
+.hub-nav a.on{color:#fff;border-bottom-color:var(--accent)}
+.hub-tools{display:flex;gap:8px;align-items:center}
+.hub-seg{display:flex;border:1px solid #ffffff33;border-radius:8px;overflow:hidden}
+.hub-seg button{font:600 13px var(--font);min-height:32px;padding:0 11px;border:0;background:transparent;color:var(--barInk);cursor:pointer;box-shadow:none;border-radius:0}
+.hub-seg button.on{background:var(--accent);color:#0f2742}
+.hub-theme{font:600 13px var(--font);min-height:34px;padding:0 12px;border-radius:8px;border:1px solid #ffffff33;background:transparent;color:var(--barInk);cursor:pointer;box-shadow:none;display:inline-flex;align-items:center;gap:6px}
+.hub-theme:hover,.hub-seg button:hover:not(.on){background:#ffffff14}
+@media(max-width:860px){.hub-nav{order:3;flex-basis:100%;overflow-x:auto;flex-wrap:nowrap}.hub-nav a{padding:10px 12px 9px}.hub-tools{margin-left:auto}}
+
+/* ---------- page head ---------- */
+.hub-head{background:var(--card);border-bottom:1px solid var(--line)}
+.hub-head .hub-in{min-height:0;padding-top:18px;padding-bottom:16px;justify-content:space-between;align-items:flex-end}
+.hub-crumb{font-size:12px;color:var(--mute);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin:0 0 4px}
+.hub-head h1{margin:0;font-size:clamp(22px,3vw,28px);line-height:1.15;font-weight:700}
+.hub-head h1 b{font-weight:700;color:var(--pri)}
+.hub-head p.sub{margin:6px 0 0;color:var(--mute);font-size:14px;max-width:780px}
+.hub-help{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;color:var(--pri);text-decoration:none;border:1px solid var(--line2);border-color:var(--line);background:var(--soft);padding:8px 14px;border-radius:8px;white-space:nowrap}
+.hub-help:hover{border-color:var(--pri)}
+
+/* ---------- layout + components ---------- */
+main{max-width:1400px;margin:0 auto;padding:18px max(2vw,14px) 56px;display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh)}
+.card h2{margin:0 0 10px;font-size:16px;font-weight:700}
+.hint{color:var(--mute);font-size:13px;margin:8px 0 0}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-top:12px}
+button{font:600 14px var(--font);min-height:40px;padding:0 16px;border-radius:8px;border:1px solid var(--pri);cursor:pointer;background:var(--pri);color:var(--priInk);box-shadow:none}
+button:hover{filter:brightness(1.07)}
+button.alt{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+button.alt:hover{border-color:var(--pri);filter:none}
+button.warn{background:var(--card);color:var(--bad);border:1px solid var(--line)}
+button.warn.arm{background:var(--bad);color:#fff;border-color:var(--bad)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+textarea{width:100%;min-height:130px;font:13px/1.45 var(--mono);padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--soft);color:var(--ink);white-space:pre;overflow:auto}
+input,select{font:15px var(--font);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--soft);color:var(--ink);min-height:40px}
+label.f{display:grid;gap:4px;font-size:13px;font-weight:600;color:var(--mute)}
+details summary{cursor:pointer;font-weight:700}
+code{font:13px var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+#msg{font-weight:600;margin:0;font-size:14px;color:var(--ok)}#msg.err{color:var(--bad)}
+.hub-foot{max-width:1400px;margin:0 auto;padding:0 max(2vw,14px) 30px;color:var(--mute);font-size:12px}
+@media print{.hub-bar,.hub-help{display:none}}

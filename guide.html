@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>User Guide · OT Hub</title>
+<link rel="stylesheet" href="hub.css">
+<style>
+.doc{display:grid;grid-template-columns:240px minmax(0,1fr);gap:20px;align-items:start}
+.toc{position:sticky;top:14px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px}
+.toc p{margin:6px 8px 6px;font-size:11px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.toc a{display:block;padding:7px 10px;border-radius:6px;text-decoration:none;color:var(--ink);font-size:14px;font-weight:500;border-left:3px solid transparent}
+.toc a:hover{background:var(--soft)}
+.toc a.on{background:var(--priSoft);border-left-color:var(--pri);color:var(--pri);font-weight:600}
+.sec{scroll-margin-top:14px}
+.sec h2{font-size:20px;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+.sec h2 .tagp{font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;background:var(--priSoft);color:var(--pri);text-transform:uppercase;letter-spacing:.05em}
+.sec .lead{color:var(--mute);margin:0 0 14px}
+ol.steps{list-style:none;margin:0;padding:0;counter-reset:s;display:grid;gap:10px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--soft)}
+ol.steps li::before{content:counter(s);width:30px;height:30px;border-radius:6px;background:var(--pri);color:var(--priInk);font-weight:700;display:grid;place-items:center}
+ol.steps b{display:block;margin-bottom:2px}
+ol.steps span{color:var(--mute);font-size:14px}
+.note{margin-top:12px;padding:10px 14px;border-left:4px solid var(--accent);background:var(--soft);border-radius:0 8px 8px 0;font-size:14px}
+.open{display:inline-flex;margin-top:14px;text-decoration:none;font-weight:600;font-size:14px;padding:9px 16px;border-radius:8px;background:var(--pri);color:var(--priInk)}
+pre{font:12px/1.5 var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow:auto;margin:10px 0 0}
+@media(max-width:820px){.doc{grid-template-columns:minmax(0,1fr)}.toc{position:static}}
+</style>
+</head>
+<body data-page="guide">
+<header id="hub"></header><script src="hub.js"></script>
+<main>
+  <div class="doc">
+    <nav class="toc" aria-label="Contents">
+      <p data-g="contents"></p>
+      <a href="#calendar" data-g="calName"></a>
+      <a href="#plan" data-g="planName"></a>
+      <a href="#data" data-g="dataName"></a>
+    </nav>
+    <div style="display:grid;gap:16px">
+      <section class="card sec" id="calendar">
+        <h2><span data-g="calName"></span><span class="tagp" data-g="tag1"></span></h2>
+        <p class="lead" data-g="calLead"></p>
+        <ol class="steps" id="calSteps"></ol>
+        <p class="note" data-g="calNote"></p>
+        <a class="open" href="calendar.html" data-g="calOpen"></a>
+      </section>
+      <section class="card sec" id="plan">
+        <h2><span data-g="planName"></span><span class="tagp" data-g="tag2"></span></h2>
+        <p class="lead" data-g="planLead"></p>
+        <ol class="steps" id="planSteps"></ol>
+        <p class="note" data-g="planNote"></p>
+        <a class="open" href="ot.html" data-g="planOpen"></a>
+      </section>
+      <section class="card sec" id="data">
+        <h2 data-g="dataName"></h2>
+        <p class="lead" data-g="dataLead"></p>
+        <pre>Fieldname   Name   2026-12-01  2026-12-02  ...  Total OT (Hrs)
+Shiftcode   Ali    M001        M001        ...
+WorkStatus  Ali    W           W           ...
+OT          Ali    20:00                   ...  61</pre>
+        <p class="note" data-g="dataNote"></p>
+      </section>
+    </div>
+  </div>
+</main>
+<script>
+{
+const G = {
+ en: {contents:"Contents", calName:"Horse Calendar", planName:"Plan vs Actual", dataName:"Copying data from Excel", tag1:"Roster → PNG", tag2:"Hours & RM",
+  calLead:"Turns the monthly roster into a horse-style calendar image for each staff member.",
+  cal:[["Copy the roster in Excel","Select the Fieldname, Shiftcode, WorkStatus and OT rows (full rows are fine, hidden columns included) and press Ctrl+C."],
+       ["Paste into the box","Open Horse Calendar and paste with Ctrl+V. Several people can be pasted at once."],
+       ["Check holidays (optional)","Open Settings to edit public holidays (YYYY-MM-DD Name). The same list is used by the Planning Board."],
+       ["Generate","Press Generate calendar. One calendar appears per person per month."],
+       ["Download","Press Download PNG under each calendar, or long-press the image on a phone."],
+       ["Send to Plan vs Actual (optional)","Press Send to Plan vs Actual to compare the same roster with actual hours."]],
+  calNote:"Empty Saturday counts as OFF and empty Sunday as REST. If the data covers two months (for example a 24th–23rd cut-off), two calendars are created.",
+  calOpen:"Open Horse Calendar",
+  planLead:"Compares planned OT (from the roster) with actual OT you key in, in hours and in RM.",
+  plan:[["Paste the roster","Paste the same Excel rows as the Horse Calendar, or use Send to Plan vs Actual from the calendar."],
+        ["Set the cut-off dates","Enter the cut-off start and end dates. They change month to month, so they are entered by hand."],
+        ["Press Calculate","Plan hours are worked out from the OT end time. Each day gets a type: Normal, OFF or Public holiday. You can change the type per day."],
+        ["Key in actual hours","Type the actual OT hours for each day. They are saved in this browser automatically."],
+        ["Read the result","The summary cards show Plan vs Actual in hours and RM, with the difference. Each staff member has a tab."],
+        ["Reset when finished","Reset (tap twice) clears the paste, cut-off and all actual hours."]],
+  planNote:"Rates: Revised MJG9–MJG14. Hours are rounded down; minimum 1 hour. Shift end, OFF-day start and break can be adjusted under Settings.",
+  planOpen:"Open Plan vs Actual",
+  dataLead:"Both tools read the same rows from the Excel roster. The first column holds the row label; dates are in the Fieldname row.",
+  dataNote:"Data is kept only in the browser you use. Nothing is uploaded. Use dummy names when demonstrating."},
+ ms: {contents:"Kandungan", calName:"Kalendar Kuda", planName:"Plan vs Actual", dataName:"Copy data dari Excel", tag1:"Jadual → PNG", tag2:"Jam & RM",
+  calLead:"Tukar jadual bulanan kepada gambar kalendar kuda untuk setiap pekerja.",
+  cal:[["Copy jadual dalam Excel","Pilih baris Fieldname, Shiftcode, WorkStatus dan OT (boleh copy baris penuh, termasuk lajur tersembunyi) dan tekan Ctrl+C."],
+       ["Paste dalam kotak","Buka Kalendar Kuda dan paste dengan Ctrl+V. Boleh paste ramai orang sekali gus."],
+       ["Semak cuti (pilihan)","Buka Tetapan untuk ubah cuti umum (YYYY-MM-DD Nama). Senarai sama digunakan oleh Papan Perancangan."],
+       ["Jana","Tekan Jana kalendar. Satu kalendar keluar bagi setiap orang setiap bulan."],
+       ["Muat turun","Tekan Download PNG di bawah setiap kalendar, atau tekan lama gambar di telefon."],
+       ["Hantar ke Plan vs Actual (pilihan)","Tekan Hantar ke Plan vs Actual untuk banding jadual sama dengan jam sebenar."]],
+  calNote:"Sabtu kosong dikira OFF dan Ahad kosong dikira REST. Kalau data merangkumi dua bulan (contoh cut-off 24 hingga 23), dua kalendar akan dijana.",
+  calOpen:"Buka Kalendar Kuda",
+  planLead:"Banding OT plan (dari jadual) dengan OT sebenar yang diisi, dalam jam dan RM.",
+  plan:[["Paste jadual","Paste baris Excel yang sama seperti Kalendar Kuda, atau guna Hantar ke Plan vs Actual dari kalendar."],
+        ["Isi tarikh cut-off","Masukkan tarikh mula dan tamat cut-off. Ia berubah setiap bulan, jadi diisi sendiri."],
+        ["Tekan Kira","Jam plan dikira dari masa tamat OT. Setiap hari diberi jenis: Biasa, OFF atau Cuti Umum. Jenis boleh diubah setiap hari."],
+        ["Isi jam sebenar","Taip jam OT sebenar bagi setiap hari. Ia disimpan dalam browser ini secara automatik."],
+        ["Baca keputusan","Kad ringkasan tunjuk Plan vs Actual dalam jam dan RM, berserta bezanya. Setiap pekerja ada tab sendiri."],
+        ["Reset bila selesai","Reset (tekan dua kali) padam data paste, cut-off dan semua jam sebenar."]],
+  planNote:"Kadar: Revised MJG9–MJG14. Jam dibundarkan ke bawah; minimum 1 jam. Masa tamat shift, mula OFF dan rehat boleh diubah dalam Tetapan.",
+  planOpen:"Buka Plan vs Actual",
+  dataLead:"Kedua-dua alat baca baris yang sama dari jadual Excel. Lajur pertama ialah label baris; tarikh berada dalam baris Fieldname.",
+  dataNote:"Data hanya disimpan dalam browser yang digunakan. Tiada apa dimuat naik. Guna nama contoh semasa demo."}
+};
+const steps = a => a.map(([t, d]) => `<li><div><b>${t}</b><span>${d}</span></div></li>`).join("");
+function paint() {
+  const L = G[(window.HUB && HUB.lang) || "en"] || G.en;
+  document.querySelectorAll("[data-g]").forEach(e => e.textContent = L[e.dataset.g]);
+  document.getElementById("calSteps").innerHTML = steps(L.cal);
+  document.getElementById("planSteps").innerHTML = steps(L.plan);
+}
+document.addEventListener("hub:lang", paint);
+paint();
+const links = [...document.querySelectorAll(".toc a")];
+function mark() { const h = location.hash || "#calendar"; links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === h)); }
+addEventListener("hashchange", mark); mark();
+}
+</script>
+</body>
+</html>

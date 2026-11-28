@@ -4,29 +4,28 @@ const $ = id => document.getElementById(id);
 const T = {
  ms: {title:'Kalendar Kuda <b>OT</b>', sub:'Paste jadual dari Excel → dapat kalendar kuda PNG untuk setiap orang.', h1:'1. Paste data Excel', ph:'Copy baris Fieldname / Shiftcode / WorkStatus / OT dari Excel, kemudian paste di sini',
   hint1:'Copy terus dari Excel (Ctrl+C), termasuk baris <b>Fieldname</b> yang ada tarikh. Boleh paste ramai orang sekali gus; setiap nama dapat kalendar sendiri. Lajur "Total OT (Hrs)" dipakai kalau ada.',
-  go:'Jana kalendar',send:'📊 Hantar ke Plan vs Actual',noSend:'Paste data Excel dulu.', sample:'Isi contoh', clear:'Kosongkan', h2:'2. Tetapan (cuti umum &amp; kiraan jam OT)', hint2:'Cuti umum: satu baris setiap tarikh, format <code>YYYY-MM-DD Nama</code>.', hint3:'Jam OT hanya dikira di sini kalau data tiada lajur Total.',
+  go:'Jana kalendar',send:'Hantar ke Plan vs Actual',noSend:'Paste data Excel dulu.', sample:'Isi contoh', clear:'Kosongkan', h2:'2. Tetapan (cuti umum &amp; kiraan jam OT)', hint2:'Cuti umum: satu baris setiap tarikh, format <code>YYYY-MM-DD Nama</code>.', hint3:'Jam OT hanya dikira di sini kalau data tiada lajur Total.',
   lw:'OT hari kerja (jam)', lo:'OT hari OFF/REST (jam)', sop:'📘 SOP',
   nodata:"Tiada data dijumpai. Pastikan baris 'Fieldname' (dengan tarikh) dan baris Shiftcode / WorkStatus / OT turut di-copy.", dlfail:'Download dibatalkan. Tekan lama pada gambar untuk simpan.', save:'Atau tekan lama / klik kanan gambar → Save image.',
   done:(n,x)=>`Siap: ${n} kalendar (${x}).`, ph_hol:'Cuti Umum',
   c_title:'JADUAL KERJA & OT', c_total:'Jumlah OT', c_hrs:'Jam', c_leg:'Petunjuk:', c_l:['(Bekerja)','(Cuti)','(Rehat)','(Masa OT)'], c_time:'Masa OT:'},
  en: {title:'Horse Calendar <b>OT</b>', sub:'Paste your roster from Excel → get a horse-style calendar PNG for each person.', h1:'1. Paste Excel data', ph:'Copy the Fieldname / Shiftcode / WorkStatus / OT rows from Excel, then paste here',
   hint1:'Copy straight from Excel (Ctrl+C), including the <b>Fieldname</b> row with the dates. You can paste several people at once; each name gets its own calendar. The "Total OT (Hrs)" column is used when present.',
-  go:'Generate calendar',send:'📊 Send to Plan vs Actual',noSend:'Paste the Excel data first.', sample:'Load example', clear:'Clear', h2:'2. Settings (public holidays &amp; OT hours)', hint2:'Public holidays: one line per date, format <code>YYYY-MM-DD Name</code>.', hint3:'OT hours are only calculated here when the data has no Total column.',
+  go:'Generate calendar',send:'Send to Plan vs Actual',noSend:'Paste the Excel data first.', sample:'Load example', clear:'Clear', h2:'2. Settings (public holidays &amp; OT hours)', hint2:'Public holidays: one line per date, format <code>YYYY-MM-DD Name</code>.', hint3:'OT hours are only calculated here when the data has no Total column.',
   lw:'OT on work day (hrs)', lo:'OT on OFF/REST day (hrs)', sop:'📘 SOP',
   nodata:"No data found. Make sure the 'Fieldname' row (with dates) and the Shiftcode / WorkStatus / OT rows are copied too.", dlfail:'Download cancelled. Long-press the image to save it.', save:'Or long-press / right-click the image → Save image.',
   done:(n,x)=>`Done: ${n} calendar(s) (${x}).`, ph_hol:'Public Holiday',
   c_title:'WORK & OT SCHEDULE', c_total:'Total OT', c_hrs:'Hrs', c_leg:'Legend:', c_l:['(Working)','(Off day)','(Rest day)','(OT hours)'], c_time:'OT Time:'}
 };
 let LANG = 'ms';
-try { LANG = new URLSearchParams(location.search).get('lang') || localStorage.getItem('kk-lang') || (navigator.language||'').startsWith('ms') && 'ms' || 'ms'; } catch (e) {}
-if (!T[LANG]) LANG = 'ms';
+try { LANG = new URLSearchParams(location.search).get('lang') || localStorage.getItem('kk-lang') || 'en'; } catch (e) {}
+if (!T[LANG]) LANG = 'en';
 let L = T[LANG];
 function applyLang() {
   L = T[LANG]; document.documentElement.lang = LANG;
   document.querySelectorAll('[data-i]').forEach(e => { e.innerHTML = L[e.dataset.i]; });
   document.querySelectorAll('[data-ph]').forEach(e => { e.placeholder = L[e.dataset.ph]; });
   document.querySelectorAll('[data-l]').forEach(b => b.classList.toggle('on', b.dataset.l === LANG));
-  document.querySelector('.sop').href = 'sop.html?lang=' + LANG;
 }
 
 const imgs = {};
