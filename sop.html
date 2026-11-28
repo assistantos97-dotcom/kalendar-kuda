@@ -77,7 +77,7 @@ dl.faq dt{font-weight:800;margin-top:12px;color:#fff}dl.faq dd{margin:4px 0 0;co
     <div class="brand">🐎 <span data-i="brand"></span> <b>SOP</b></div>
     <div class="tools">
       <button data-l="ms">BM</button><button data-l="en">EN</button>
-      <a class="go" id="open" href="./" data-i="open"></a>
+      <a class="go" id="open" href="calendar.html" data-i="open"></a>
     </div>
   </div>
 
@@ -116,7 +116,7 @@ dl.faq dt{font-weight:800;margin-top:12px;color:#fff}dl.faq dd{margin:4px 0 0;co
         <section class="step"><div class="kick mono">TROUBLESHOOT</div><h2 data-i="s7t"></h2><dl class="faq" data-i="s7l"></dl></section>
 
         <section class="step"><div class="kick mono">COMPLETE</div><div class="okbig mono">✔ INSTALL COMPLETE</div><p data-i="s8p"></p>
-          <a class="link mono" href="./" data-i="open2"></a></section>
+          <a class="link mono" href="calendar.html" data-i="open2"></a></section>
       </div>
     </div>
     <div class="prog"><div class="track"><div class="fill" id="fill"></div></div><div class="pct mono" id="pct"></div>
@@ -198,7 +198,7 @@ function render() {
   document.documentElement.lang = LANG;
   document.querySelectorAll('[data-i]').forEach(e => { e.innerHTML = L[e.dataset.i]; });
   document.querySelectorAll('[data-l]').forEach(b => b.classList.toggle('on', b.dataset.l === LANG));
-  $('open').href = './?lang=' + LANG;
+  $('open').href = 'calendar.html?lang=' + LANG;
   $('rail').innerHTML = L.rail.map((t, k) => `<button data-k="${k}" class="${k === cur ? 'on' : k < cur ? 'done' : ''}"><span class="n mono">${k < cur ? '✓' : k + 1}</span><span class="lbl">${t}</span></button>`).join('');
   $('rail').querySelectorAll('button').forEach(b => b.onclick = () => go(+b.dataset.k));
   steps.forEach((s, k) => s.classList.toggle('on', k === cur));
@@ -210,7 +210,7 @@ function render() {
 }
 function go(k) { cur = Math.max(0, Math.min(N - 1, k)); render(); }
 $('back').onclick = () => go(cur - 1);
-$('next').onclick = () => { if (cur === N - 1) location.href = './?lang=' + LANG; else go(cur + 1); };
+$('next').onclick = () => { if (cur === N - 1) location.href = 'calendar.html?lang=' + LANG; else go(cur + 1); };
 document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') go(cur + 1); if (e.key === 'ArrowLeft') go(cur - 1); });
 document.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { LANG = b.dataset.l; try { localStorage.setItem('kk-lang', LANG); } catch (e) {} render(); boot(); });
 render(); boot();

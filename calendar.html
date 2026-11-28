@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalendar Kuda OT</title>
+<style>
+/* VOICE: practical, cheerful tool for shift workers
+   IDEA: a Malaysian horse calendar printed from your Excel roster
+   PICTURE: the generated calendar itself, large, right under the paste box
+   COLOUR and TYPE: navy #012056, festive red #c8101e, calendar yellow #fff200; Arial Black-ish headings
+   LAYOUT: one column: paste -> settings -> calendars (one per person) */
+:root{color-scheme:light dark;--bg:light-dark(#f3f5fa,#0b1222);--card:light-dark(#fff,#131c33);--ink:light-dark(#101418,#e8ecf5);--mute:light-dark(#5a6372,#9aa6bd);--line:light-dark(#d5dae4,#27365a);--navy:#012056;--red:#c8101e;--yel:#ffd21a}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:clip}
+header{background:var(--navy);color:#fff;padding:18px max(5vw,16px);border-bottom:5px solid var(--red)}
+header h1{margin:0;font-size:clamp(24px,5vw,36px);line-height:1.1;font-weight:900}
+header h1 b{color:var(--yel)}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}.lang{display:flex;gap:8px;align-items:center}.lang button.alt{min-height:40px;padding:0 14px;color:#fff;border-color:#4a5d8f}.lang button.on{background:#ffd21a;color:#111;border-color:#ffd21a}.sop{color:#012056;background:#fff;font-weight:800;text-decoration:none;padding:9px 14px;border-radius:10px}
+header p{margin:6px 0 0;color:#c9d4ee;font-size:15px}
+main{max-width:1240px;margin:0 auto;padding:20px max(4vw,12px) 60px;display:grid;gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h2{margin:0 0 8px;font-size:19px}
+textarea{width:100%;min-height:170px;font:14px/1.4 Consolas,monospace;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);white-space:pre;overflow:auto}
+.hint{color:var(--mute);font-size:14px;margin:6px 0 0}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+button{font:inherit;font-weight:700;min-height:44px;padding:0 18px;border-radius:10px;border:0;cursor:pointer;background:var(--red);color:#fff}
+button.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--yel);outline-offset:2px}
+label{font-size:15px;display:flex;gap:8px;align-items:center}
+input[type=number]{width:84px;font:16px system-ui;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+details summary{cursor:pointer;font-weight:700}
+#msg{font-weight:600}
+#msg.err{color:#e0323f}
+.out{display:grid;gap:18px}
+.cal{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.cal h3{margin:0 0 8px;font-size:18px}
+.cal img{width:100%;max-width:900px;display:block;border-radius:8px;box-shadow:0 4px 18px #0003}
+@media(min-width:1000px){.out{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><h1 data-i="title">Kalendar Kuda <b>OT</b></h1><div class="lang"><button class="alt" data-l="ms">BM</button><button class="alt" data-l="en">EN</button><a class="sop otl" href="./">🗓️ Planning Board</a><a class="sop" href="sop.html" data-i="sop">📘 SOP</a><a class="sop otl" href="ot.html">📊 Plan vs Actual</a></div></div>
+  <p data-i="sub"></p>
+</header>
+<main>
+  <section class="card">
+    <h2 data-i="h1"></h2>
+    <textarea id="src" spellcheck="false" data-ph="ph"></textarea>
+    <p class="hint" data-i="hint1"></p>
+    <div class="row">
+      <button id="go" data-i="go"></button>
+      <button class="alt" id="sample" data-i="sample"></button>
+      <button class="alt" id="clear" data-i="clear"></button>
+      <button class="alt" id="send" data-i="send"></button>
+    </div>
+  </section>
+
+  <section class="card">
+    <details>
+      <summary data-i="h2"></summary>
+      <p class="hint" data-i="hint2"></p>
+      <textarea id="hol" style="min-height:90px">2026-12-11 Sultan's Birthday
+2026-12-25 Christmas</textarea>
+      <p class="hint" data-i="hint3"></p>
+      <div class="row">
+        <label><span data-i="lw"></span> <input type="number" id="hW" step="0.5" value="3.5"></label>
+        <label><span data-i="lo"></span> <input type="number" id="hO" step="0.5" value="9.5"></label>
+      </div>
+    </details>
+  </section>
+
+  <p id="msg" aria-live="polite"></p>
+  <section class="out" id="out"></section>
+</main>
+
+<script src="imgs.js"></script>
+<script src="app.js?v=5"></script>
+</body>
+</html>

@@ -1,82 +1,311 @@
 <!DOCTYPE html>
-<html lang="ms">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kalendar Kuda OT</title>
+<title>OT Planning Board</title>
 <style>
-/* VOICE: practical, cheerful tool for shift workers
-   IDEA: a Malaysian horse calendar printed from your Excel roster
-   PICTURE: the generated calendar itself, large, right under the paste box
-   COLOUR and TYPE: navy #012056, festive red #c8101e, calendar yellow #fff200; Arial Black-ish headings
-   LAYOUT: one column: paste -> settings -> calendars (one per person) */
-:root{color-scheme:light dark;--bg:light-dark(#f3f5fa,#0b1222);--card:light-dark(#fff,#131c33);--ink:light-dark(#101418,#e8ecf5);--mute:light-dark(#5a6372,#9aa6bd);--line:light-dark(#d5dae4,#27365a);--navy:#012056;--red:#c8101e;--yel:#ffd21a}
-:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
-*{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:clip}
-header{background:var(--navy);color:#fff;padding:18px max(5vw,16px);border-bottom:5px solid var(--red)}
-header h1{margin:0;font-size:clamp(24px,5vw,36px);line-height:1.1;font-weight:900}
-header h1 b{color:var(--yel)}
-.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}.lang{display:flex;gap:8px;align-items:center}.lang button.alt{min-height:40px;padding:0 14px;color:#fff;border-color:#4a5d8f}.lang button.on{background:#ffd21a;color:#111;border-color:#ffd21a}.sop{color:#012056;background:#fff;font-weight:800;text-decoration:none;padding:9px 14px;border-radius:10px}
-header p{margin:6px 0 0;color:#c9d4ee;font-size:15px}
-main{max-width:1240px;margin:0 auto;padding:20px max(4vw,12px) 60px;display:grid;gap:18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
-.card h2{margin:0 0 8px;font-size:19px}
-textarea{width:100%;min-height:170px;font:14px/1.4 Consolas,monospace;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);white-space:pre;overflow:auto}
-.hint{color:var(--mute);font-size:14px;margin:6px 0 0}
-.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
-button{font:inherit;font-weight:700;min-height:44px;padding:0 18px;border-radius:10px;border:0;cursor:pointer;background:var(--red);color:#fff}
-button.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
-button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--yel);outline-offset:2px}
-label{font-size:15px;display:flex;gap:8px;align-items:center}
-input[type=number]{width:84px;font:16px system-ui;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
-details summary{cursor:pointer;font-weight:700}
-#msg{font-weight:600}
-#msg.err{color:#e0323f}
-.out{display:grid;gap:18px}
-.cal{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
-.cal h3{margin:0 0 8px;font-size:18px}
-.cal img{width:100%;max-width:900px;display:block;border-radius:8px;box-shadow:0 4px 18px #0003}
-@media(min-width:1000px){.out{grid-template-columns:1fr 1fr}}
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+:root{--bg:#f1f5f9;--card:#fff;--ink:#0f172a;--mute:#64748b;--line:#e2e8f0;--soft:#f8fafc;--indigo:#4f46e5;--wk:#eef2f7;--hol:#fde8ea;--holInk:#c81e3a;--ot:#fde047;--otInk:#3f3a00;--sh:0 1px 2px #0f172a0d,0 8px 24px #0f172a10}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-user-select:none;user-select:none}
+header{background:radial-gradient(700px 260px at 85% -30%,#6366f155,transparent 60%),#1e293b;color:#fff;padding:20px max(3vw,14px) 58px}
+.top{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+h1{margin:0;font-size:clamp(24px,4vw,36px);line-height:1.05;font-weight:800}h1 b{color:#a5b4fc}
+header p{margin:8px 0 0;color:#c7d4f5;font-size:14px}
+.nav{display:flex;gap:4px;padding:4px;border-radius:999px;background:#ffffff1f;flex-wrap:wrap}
+.nav a{color:#dbe5ff;text-decoration:none;font-weight:700;font-size:14px;padding:9px 15px;border-radius:999px;white-space:nowrap}
+.nav a.on{background:#fff;color:#1e293b}
+main{margin:-40px auto 0;padding:0 max(2vw,10px) 50px;display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.card{background:var(--card);border-radius:18px;padding:16px 18px;box-shadow:var(--sh)}
+.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.month{display:flex;align-items:center;gap:8px}
+.month h2{margin:0;font-size:22px;font-weight:800;min-width:190px;text-align:center}
+button{font:inherit;font-weight:700;min-height:40px;padding:0 16px;border-radius:12px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
+button.pri{background:var(--indigo);border-color:var(--indigo);color:#fff}
+button.ico{width:40px;padding:0;font-size:18px}
+button:focus-visible{outline:3px solid #facc15;outline-offset:2px}
+.stats{display:flex;gap:10px;flex-wrap:wrap}
+.stat{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:6px 14px;min-width:110px}
+.stat small{display:block;color:var(--mute);font-size:12px;font-weight:600}
+.stat b{font-size:20px;font-variant-numeric:tabular-nums}
+/* palette */
+.pal{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.pal .lbl{font-size:13px;font-weight:700;color:var(--mute)}
+.chip{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:34px;padding:0 10px;border-radius:10px;background:var(--ot);color:var(--otInk);font-weight:800;font-size:15px;cursor:grab;touch-action:none;box-shadow:0 1px 0 #0000001a,inset 0 -2px 0 #00000014}
+.chip:active{cursor:grabbing}
+.trash{margin-left:auto;display:flex;align-items:center;gap:6px;border:2px dashed #cbd5e1;border-radius:12px;padding:6px 14px;color:var(--mute);font-weight:700;font-size:13px}
+.trash.hot{border-color:#dc2626;color:#dc2626;background:#fee2e2}
+/* grid */
+.wrap{overflow:auto;border-radius:14px;border:1px solid var(--line);max-height:72vh}
+table{width:100%;border-collapse:separate;border-spacing:0;font-variant-numeric:tabular-nums}
+th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;text-align:center}
+thead th{position:sticky;top:0;background:#fff;z-index:3}
+thead tr.hl th{top:57px}
+.nm{position:sticky;left:0;z-index:2;background:#fff;text-align:left;min-width:118px;padding:0 8px;font-weight:700;white-space:nowrap}
+thead .nm{z-index:4}
+.day{width:35px;min-width:35px;height:56px;line-height:1.1}
+.day .d{font-size:15px;font-weight:800;display:block}
+.day .w{font-size:11px;color:var(--mute);font-weight:700}
+.wkend{background:var(--wk)!important}
+.hol{background:var(--hol)!important}
+.day.hol .d,.day.hol .w{color:var(--holInk)}
+tr.hl th{height:92px;background:#fff;vertical-align:middle}
+.hp{display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg);border-radius:6px;background:var(--holInk);color:#fff;font-size:10px;font-weight:800;line-height:1.1;padding:6px 3px;cursor:help;max-height:86px;overflow:hidden;white-space:nowrap}
+td.cell{width:35px;height:44px;position:relative}
+td.cell.tgt{outline:3px solid var(--indigo);outline-offset:-3px;background:#e0e7ff!important}
+td.cell.paste{cursor:copy}
+td.cell .chip{min-width:28px;height:30px;padding:0 3px;font-size:13px;border-radius:8px}
+td.tot,th.tot{position:sticky;right:0;background:#f8fafc;min-width:64px;font-weight:800;z-index:2}
+thead th.tot{z-index:4}
+td.tot small{display:block;font-size:11px;color:var(--mute);font-weight:600}
+tfoot td{background:#f8fafc;font-weight:800;font-size:12px;height:40px}
+tfoot td small{display:block;font-size:9px;color:var(--mute);font-weight:600}
+tfoot .nm{background:#f8fafc}
+.nm .pn{outline:none;border-radius:6px;padding:2px 4px;cursor:text;-webkit-user-select:text;user-select:text}
+.nm .pn:focus{background:#eef2ff}
+.nm .x{border:0;background:none;min-height:0;padding:0 4px;color:#94a3b8;font-size:16px;float:right}
+.ghost{position:fixed;pointer-events:none;z-index:99;transform:translate(-50%,-50%) scale(1.12);box-shadow:0 10px 24px #0004}
+/* popover */
+.pop{position:fixed;z-index:60;background:#fff;border-radius:14px;box-shadow:0 12px 32px #0f172a33;padding:10px;display:none;gap:8px;align-items:center}
+.pop.on{display:flex}
+.pop span{font-weight:800;font-size:18px;min-width:44px;text-align:center}
+.pop button{min-height:36px;padding:0 10px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--mute);font-weight:600;margin-top:10px}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:6px;border:1px solid var(--line)}
+.hlist{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:6px}
+.hlist li{display:flex;gap:10px;align-items:center;font-size:14px}
+.hlist .dt{font-weight:800;color:var(--holInk);min-width:110px}
+.tag{font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;background:#fef3c7;color:#92400e}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:80}
+.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:800}
+textarea{width:100%;min-height:110px;font:13px/1.45 Consolas,ui-monospace,monospace;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--soft);-webkit-user-select:text;user-select:text}
+.hint{color:var(--mute);font-size:13px;margin:6px 0 0}
 </style>
 </head>
 <body>
 <header>
-  <div class="top"><h1 data-i="title">Kalendar Kuda <b>OT</b></h1><div class="lang"><button class="alt" data-l="ms">BM</button><button class="alt" data-l="en">EN</button><a class="sop" href="sop.html" data-i="sop">📘 SOP</a><a class="sop otl" href="ot.html">📊 Plan vs Actual</a></div></div>
-  <p data-i="sub"></p>
+  <div class="top">
+    <h1>OT Planning <b>Board</b></h1>
+    <nav class="nav" aria-label="Pages"><a href="./" class="on" aria-current="page">🗓️ Planning Board</a><a href="calendar.html?lang=en">🐎 Horse Calendar</a><a href="ot.html?lang=en">📊 Plan vs Actual</a></nav>
+  </div>
+  <p>Drag OT blocks onto the board. Public holidays and weekends are marked so planners can see them while arranging OT.</p>
 </header>
 <main>
   <section class="card">
-    <h2 data-i="h1"></h2>
-    <textarea id="src" spellcheck="false" data-ph="ph"></textarea>
-    <p class="hint" data-i="hint1"></p>
-    <div class="row">
-      <button id="go" data-i="go"></button>
-      <button class="alt" id="sample" data-i="sample"></button>
-      <button class="alt" id="clear" data-i="clear"></button>
-      <button class="alt" id="send" data-i="send"></button>
+    <div class="bar">
+      <div class="month"><button class="ico" id="prev" aria-label="Previous month">‹</button><h2 id="mTitle"></h2><button class="ico" id="next" aria-label="Next month">›</button></div>
+      <div class="stats">
+        <div class="stat"><small>Total OT hours</small><b id="sHrs">0</b></div>
+        <div class="stat"><small>OT shifts</small><b id="sCnt">0</b></div>
+        <div class="stat"><small>Staff with OT</small><b id="sPpl">0</b></div>
+      </div>
+    </div>
+    <div class="pal">
+      <span class="lbl">Drag a new OT block:</span>
+      <span class="chip" data-new="2">2h</span><span class="chip" data-new="3">3h</span><span class="chip" data-new="4">4h</span><span class="chip" data-new="8">8h</span><span class="chip" data-new="11">11h</span>
+      <button id="addP">+ Add staff</button>
+      <button id="sample">Load sample</button>
+      <button id="clear">Clear month</button>
+      <div class="trash" id="trash">🗑️ Drop here to delete</div>
     </div>
   </section>
 
   <section class="card">
-    <details>
-      <summary data-i="h2"></summary>
-      <p class="hint" data-i="hint2"></p>
-      <textarea id="hol" style="min-height:90px">2026-12-11 Sultan's Birthday
-2026-12-25 Christmas</textarea>
-      <p class="hint" data-i="hint3"></p>
-      <div class="row">
-        <label><span data-i="lw"></span> <input type="number" id="hW" step="0.5" value="3.5"></label>
-        <label><span data-i="lo"></span> <input type="number" id="hO" step="0.5" value="9.5"></label>
-      </div>
-    </details>
+    <div class="wrap" id="wrap"><table id="grid"></table></div>
+    <div class="legend"><span><i style="background:var(--ot)"></i>OT block (hours)</span><span><i style="background:var(--wk)"></i>Saturday / Sunday</span><span><i style="background:var(--hol)"></i>Public holiday</span><span>Tap a block to change hours, copy or delete. Drop on another block to swap. Daily total row: hours / number of people (p).</span></div>
   </section>
 
-  <p id="msg" aria-live="polite"></p>
-  <section class="out" id="out"></section>
+  <section class="card">
+    <h2 style="margin:0;font-size:18px">Public holidays this month</h2>
+    <ul class="hlist" id="hlist"></ul>
+    <details style="margin-top:14px"><summary>Edit holiday list</summary>
+      <textarea id="hol"></textarea>
+      <p class="hint">One per line: YYYY-MM-DD Name. Shared with the Horse Calendar page.</p>
+      <button id="holSave" class="pri" style="margin-top:8px">Save holidays</button>
+    </details>
+  </section>
 </main>
 
-<script src="imgs.js"></script>
-<script src="app.js?v=5"></script>
+<div class="pop" id="pop" role="dialog" aria-label="OT block">
+  <button id="pMinus" aria-label="Less hours">−</button><span id="pVal">3</span><button id="pPlus" aria-label="More hours">+</button>
+  <button id="pCopy">Copy</button><button id="pDel" style="color:#dc2626">Delete</button><button id="pClose" aria-label="Close">✕</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const DEF_HOL = `2026-12-11 Sultan of Selangor's Birthday
+2026-12-25 Christmas Day
+2027-01-01 New Year's Day
+2027-02-01 Federal Territory Day
+2027-02-06 Chinese New Year
+2027-02-07 Chinese New Year (2nd day)`;
+const WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const MN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const pad = n => String(n).padStart(2, "0");
+const iso = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
+
+// ---------- state ----------
+const KEY = "otb:v1";
+let S = null;
+function sample() {
+  const people = ["Person A","Person B","Person C","Person D","Person E","Person F"].map((n, i) => ({id: "p" + (i + 1), name: n}));
+  const ot = {};
+  const put = (p, d, h) => ot[`p${p}|2026-12-${pad(d)}`] = h;
+  [[1,1,3],[1,2,3],[1,8,3],[1,12,8],[1,16,3],[1,22,3],[2,2,3],[2,3,3],[2,13,8],[2,17,3],[2,23,3],[2,29,3],
+   [3,1,3],[3,9,3],[3,10,3],[3,19,8],[3,24,3],[4,4,3],[4,5,8],[4,15,3],[4,18,3],[4,30,3],[5,7,3],[5,14,3],[5,20,8],[5,28,3],[6,6,8],[6,11,11],[6,21,3],[6,31,3]].forEach(a => put(...a));
+  return {y: 2026, m: 11, people, ot};
+}
+function load() { try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) {} if (!S || !S.people) S = sample(); }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function holText() { try { return localStorage.getItem("kk-hol") || DEF_HOL; } catch (e) { return DEF_HOL; } }
+function holidays() {
+  const h = {};
+  for (const l of holText().split(/\r?\n/)) { const m = l.match(/(\d{4})-(\d{1,2})-(\d{1,2})\s*(.*)/); if (m) h[iso(+m[1], +m[2] - 1, +m[3])] = m[4].trim() || "Public holiday"; }
+  return h;
+}
+
+// ---------- render ----------
+function render() {
+  const {y, m} = S, nd = new Date(y, m + 1, 0).getDate(), H = holidays();
+  $("mTitle").textContent = `${MN[m]} ${y}`;
+  const days = [];
+  for (let d = 1; d <= nd; d++) { const k = iso(y, m, d), w = new Date(y, m, d).getDay(); days.push({d, k, w, hol: H[k], wk: w === 0 || w === 6}); }
+  const cls = D => D.hol ? "hol" : D.wk ? "wkend" : "";
+  let h = `<thead><tr><th class="nm">Staff</th>`;
+  for (const D of days) h += `<th class="day ${cls(D)}"${D.hol ? ` title="${D.hol}"` : ""}><span class="d">${D.d}</span><span class="w">${WD[D.w]}</span></th>`;
+  h += `<th class="tot">Total</th></tr><tr class="hl"><th class="nm" style="font-size:12px;color:var(--mute)">Holiday</th>`;
+  for (const D of days) h += `<th class="${cls(D)}">${D.hol ? `<span class="hp" title="${D.hol} (${WD[D.w]})">${short(D.hol)}</span>` : ""}</th>`;
+  h += `<th class="tot"></th></tr></thead><tbody>`;
+  const dayTot = days.map(() => ({h: 0, n: 0}));
+  let gH = 0, gN = 0, ppl = 0;
+  for (const P of S.people) {
+    let pH = 0, pN = 0;
+    h += `<tr><th class="nm"><span class="pn" contenteditable="true" spellcheck="false" data-p="${P.id}">${esc(P.name)}</span><button class="x" data-del="${P.id}" aria-label="Remove ${esc(P.name)}">×</button></th>`;
+    days.forEach((D, i) => {
+      const v = S.ot[`${P.id}|${D.k}`];
+      if (v) { pH += v; pN++; dayTot[i].h += v; dayTot[i].n++; }
+      h += `<td class="cell ${cls(D)}" data-p="${P.id}" data-k="${D.k}">${v ? `<span class="chip" data-p="${P.id}" data-k="${D.k}">${v}</span>` : ""}</td>`;
+    });
+    if (pN) ppl++;
+    gH += pH; gN += pN;
+    h += `<td class="tot">${pH}h<small>${pN} day${pN === 1 ? "" : "s"}</small></td></tr>`;
+  }
+  h += `</tbody><tfoot><tr><td class="nm">Daily total</td>`;
+  days.forEach((D, i) => h += `<td class="${cls(D)}">${dayTot[i].h || ""}<small>${dayTot[i].n ? dayTot[i].n + "p" : ""}</small></td>`);
+  h += `<td class="tot">${gH}h</td></tr></tfoot>`;
+  $("grid").innerHTML = h;
+  $("sHrs").textContent = gH; $("sCnt").textContent = gN; $("sPpl").textContent = `${ppl} / ${S.people.length}`;
+  // holiday list
+  const list = days.filter(D => D.hol);
+  $("hlist").innerHTML = list.length ? list.map(D => `<li><span class="dt">${D.d} ${MN[m].slice(0, 3)} (${WD[D.w]})</span><span>${esc(D.hol)}</span>${D.w === 0 ? `<span class="tag">Falls on Sunday: check replacement holiday</span>` : D.w === 6 ? `<span class="tag">Falls on Saturday</span>` : ""}</li>`).join("") : `<li style="color:var(--mute)">No public holidays in this month.</li>`;
+  $("hol").value = holText();
+}
+function short(n) { return n.replace(/'s Birthday/i, "").replace(/\(.*?\)/g, "").split(/\s+/).filter(w => w && !/^(of|the|day)$/i.test(w)).slice(0, 2).join(" "); }
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c])); }
+function toast(t) { const e = $("toast"); e.textContent = t; e.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove("on"), 1800); }
+
+// ---------- drag & drop (mouse, touch, pen) ----------
+let drag = null, pasteVal = 0;
+document.addEventListener("pointerdown", e => {
+  const c = e.target.closest(".chip");
+  if (!c) return;
+  e.preventDefault();
+  drag = {src: c, x0: e.clientX, y0: e.clientY, moved: false, val: c.dataset.new ? +c.dataset.new : S.ot[`${c.dataset.p}|${c.dataset.k}`], from: c.dataset.new ? null : {p: c.dataset.p, k: c.dataset.k}, ghost: null, tgt: null};
+});
+document.addEventListener("pointermove", e => {
+  if (!drag) return;
+  if (!drag.moved && Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) < 6) return;
+  if (!drag.moved) { drag.moved = true; closePop(); const g = drag.src.cloneNode(true); g.textContent = drag.val + "h"; g.classList.add("ghost"); document.body.append(g); drag.ghost = g; if (drag.from) drag.src.style.opacity = .3; }
+  drag.ghost.style.left = e.clientX + "px"; drag.ghost.style.top = e.clientY + "px";
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  const cell = el && el.closest("td.cell"), tr = el && el.closest("#trash");
+  if (drag.tgt && drag.tgt !== cell) drag.tgt.classList.remove("tgt");
+  drag.tgt = cell; if (cell) cell.classList.add("tgt");
+  $("trash").classList.toggle("hot", !!tr); drag.trash = !!tr;
+  autoScroll(e);
+});
+document.addEventListener("pointerup", e => {
+  if (!drag) return;
+  const d = drag; drag = null;
+  if (d.ghost) d.ghost.remove();
+  $("trash").classList.remove("hot");
+  if (d.tgt) d.tgt.classList.remove("tgt");
+  if (!d.moved) { if (d.from) openPop(d.from, d.src); return; }
+  if (d.trash && d.from) { delete S.ot[`${d.from.p}|${d.from.k}`]; toast("OT block deleted"); }
+  else if (d.tgt) {
+    const to = `${d.tgt.dataset.p}|${d.tgt.dataset.k}`;
+    if (d.from) {
+      const fr = `${d.from.p}|${d.from.k}`;
+      if (fr !== to) { const old = S.ot[to]; S.ot[to] = d.val; if (old) S.ot[fr] = old; else delete S.ot[fr]; }
+    } else S.ot[to] = d.val;
+  }
+  save(); render();
+});
+function autoScroll(e) {
+  const w = $("wrap"), r = w.getBoundingClientRect(), m = 40;
+  if (e.clientX > r.right - m) w.scrollLeft += 14; else if (e.clientX < r.left + 150 + m && e.clientX > r.left) w.scrollLeft -= 14;
+  if (e.clientY > r.bottom - m) w.scrollTop += 14; else if (e.clientY < r.top + m && e.clientY > r.top) w.scrollTop -= 14;
+}
+
+// ---------- popover: edit hours, copy, delete ----------
+let popAt = null;
+function openPop(at, el) {
+  popAt = at; const r = el.getBoundingClientRect(), p = $("pop");
+  $("pVal").textContent = S.ot[`${at.p}|${at.k}`] + "h";
+  p.classList.add("on");
+  const pw = p.offsetWidth;
+  p.style.left = Math.max(8, Math.min(innerWidth - pw - 8, r.left + r.width / 2 - pw / 2)) + "px";
+  p.style.top = (r.bottom + 8 + 60 > innerHeight ? r.top - 60 : r.bottom + 8) + "px";
+}
+function closePop() { $("pop").classList.remove("on"); popAt = null; }
+function bump(n) { const k = `${popAt.p}|${popAt.k}`; S.ot[k] = Math.max(1, Math.min(16, S.ot[k] + n)); $("pVal").textContent = S.ot[k] + "h"; save(); const at = popAt; render(); popAt = at; }
+$("pMinus").onclick = () => bump(-1);
+$("pPlus").onclick = () => bump(1);
+$("pDel").onclick = () => { delete S.ot[`${popAt.p}|${popAt.k}`]; save(); closePop(); render(); toast("OT block deleted"); };
+$("pClose").onclick = closePop;
+$("pCopy").onclick = () => { pasteVal = S.ot[`${popAt.p}|${popAt.k}`]; closePop(); document.body.classList.add("pasting"); document.querySelectorAll("td.cell").forEach(c => c.classList.add("paste")); toast(`Copied ${pasteVal}h. Tap empty cells to paste. Press Esc or tap Staff header to stop.`); };
+document.addEventListener("click", e => {
+  if (pasteVal) {
+    const c = e.target.closest("td.cell");
+    if (c && !c.querySelector(".chip")) { S.ot[`${c.dataset.p}|${c.dataset.k}`] = pasteVal; save(); render(); document.querySelectorAll("td.cell").forEach(x => x.classList.add("paste")); return; }
+    if (!c) { pasteVal = 0; document.querySelectorAll("td.cell").forEach(x => x.classList.remove("paste")); }
+  }
+  if (popAt && !e.target.closest(".pop") && !e.target.closest(".chip")) closePop();
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") { closePop(); pasteVal = 0; document.querySelectorAll("td.cell").forEach(x => x.classList.remove("paste")); } });
+
+// ---------- staff ----------
+document.addEventListener("input", e => { const n = e.target.closest(".pn"); if (n) { const P = S.people.find(p => p.id === n.dataset.p); if (P) { P.name = n.textContent.trim() || P.name; save(); } } });
+document.addEventListener("keydown", e => { if (e.target.closest && e.target.closest(".pn") && e.key === "Enter") { e.preventDefault(); e.target.blur(); } });
+document.addEventListener("click", e => {
+  const x = e.target.closest("[data-del]"); if (!x) return;
+  const id = x.dataset.del, P = S.people.find(p => p.id === id);
+  if (x.dataset.arm) { S.people = S.people.filter(p => p.id !== id); for (const k of Object.keys(S.ot)) if (k.startsWith(id + "|")) delete S.ot[k]; save(); render(); toast(`${P.name} removed`); }
+  else { x.dataset.arm = 1; x.textContent = "Remove?"; x.style.color = "#dc2626"; x.style.fontSize = "12px"; setTimeout(() => { if (x.isConnected) { delete x.dataset.arm; x.textContent = "×"; x.style.color = ""; x.style.fontSize = ""; } }, 3000); }
+});
+$("addP").onclick = () => {
+  const n = S.people.length, id = "p" + Date.now().toString(36);
+  S.people.push({id, name: "Person " + (n < 26 ? String.fromCharCode(65 + n) : n + 1)}); save(); render();
+  const w = $("wrap"); w.scrollTop = w.scrollHeight;
+};
+
+// ---------- month & toolbar ----------
+$("prev").onclick = () => { S.m--; if (S.m < 0) { S.m = 11; S.y--; } save(); render(); };
+$("next").onclick = () => { S.m++; if (S.m > 11) { S.m = 0; S.y++; } save(); render(); };
+$("sample").onclick = () => { S = sample(); save(); render(); toast("Sample plan loaded (December 2026)"); };
+let clrArm = 0;
+$("clear").onclick = () => {
+  if (!clrArm) { clrArm = 1; $("clear").textContent = "Tap again to clear"; $("clear").style.color = "#dc2626"; setTimeout(() => { clrArm = 0; $("clear").textContent = "Clear month"; $("clear").style.color = ""; }, 3000); return; }
+  const pre = `${S.y}-${pad(S.m + 1)}-`;
+  for (const k of Object.keys(S.ot)) if (k.split("|")[1].startsWith(pre)) delete S.ot[k];
+  clrArm = 0; $("clear").textContent = "Clear month"; $("clear").style.color = ""; save(); render(); toast("Month cleared");
+};
+$("holSave").onclick = () => { try { localStorage.setItem("kk-hol", $("hol").value); } catch (e) {} render(); toast("Holidays saved"); };
+
+load(); render();
+</script>
 </body>
 </html>
