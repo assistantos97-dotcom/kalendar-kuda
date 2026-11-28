@@ -25,7 +25,6 @@ button.ico{width:40px;padding:0;font-size:18px}
 table{width:100%;border-collapse:separate;border-spacing:0;font-variant-numeric:tabular-nums}
 th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;text-align:center}
 thead th{position:sticky;top:0;background:var(--card);z-index:3}
-thead tr.hl th{top:57px}
 .nm{position:sticky;left:0;z-index:2;background:var(--card);text-align:left;min-width:150px;padding:0 8px;font-weight:600;white-space:nowrap}
 thead .nm{z-index:4}
 .day{width:33px;min-width:33px;height:56px;line-height:1.1}
@@ -68,7 +67,7 @@ textarea{-webkit-user-select:text;user-select:text}
 .gform{display:flex;gap:6px;align-items:center}.gform[hidden]{display:none}
 .gform input{min-height:36px;width:220px;font-size:14px}.gform button{min-height:36px}
 tr.wsr td,tr.wsr th{height:22px}
-tr.wsr td{border-bottom:1px dashed var(--line);cursor:pointer}
+tr.wsr td{border-bottom:1px dashed var(--line)}
 td.wsc{background:var(--card)}
 .st{display:inline-block;min-width:18px;padding:0 3px;border-radius:4px;font-size:10px;font-weight:700;line-height:16px}
 .stW{background:#c9f1cf;color:#13532a}.stO{background:#fbd0d6;color:#8a1c2a}.stR{background:#fbecb0;color:#6b5200}
@@ -94,6 +93,39 @@ tr.gsum .nm{font-size:12px}
 tr.gsum td.ov{background:#f59e0b33!important;color:var(--warn);font-weight:700;box-shadow:inset 0 0 0 2px #f59e0b}
 .ovc{color:var(--warn)!important;font-weight:700!important}
 .lov{background:#f59e0b55!important;border-color:#f59e0b!important}
+/* v4 additions */
+.day{position:relative}
+.hico{position:absolute;top:2px;right:2px;width:14px;height:14px;min-height:0;padding:0;border:0;border-radius:50%;background:var(--phInk);color:#fff;font:700 9px/14px var(--font);cursor:pointer}
+.tip{position:fixed;z-index:70;background:var(--bar);color:#fff;font-size:13px;font-weight:600;padding:8px 12px;border-radius:8px;box-shadow:0 8px 24px #0004;pointer-events:none;max-width:260px}
+.tip small{display:block;color:#b9c6d6;font-weight:500}
+.pal2{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+.wchip{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:30px;padding:0 10px;border-radius:6px;font-weight:700;font-size:13px;cursor:grab;touch-action:none}
+td.wsc .st{cursor:grab;touch-action:none}
+td.wsc.tgt{outline:3px solid var(--pri);outline-offset:-3px}
+.pn{cursor:pointer;font-weight:600;border-bottom:1px dashed var(--line)}
+.pn:hover{color:var(--pri);border-bottom-color:var(--pri)}
+.menu{position:fixed;z-index:65;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 32px #0f172a40;padding:6px;display:none;min-width:230px}
+.menu.on{display:block}
+.menu .mh{font-size:12px;font-weight:700;color:var(--mute);padding:6px 10px 4px;text-transform:uppercase;letter-spacing:.04em}
+.menu button{display:flex;width:100%;justify-content:flex-start;gap:8px;background:none;border:0;color:var(--ink);min-height:36px;padding:0 10px;font-weight:600;border-radius:6px}
+.menu button:hover{background:var(--soft);filter:none}
+.menu button.d{color:var(--bad)}
+.menu hr{border:0;border-top:1px solid var(--line);margin:4px 0}
+.adm{display:flex;align-items:center;gap:8px;margin-left:auto}
+.adm .badge{display:inline-flex;align-items:center;gap:6px;background:#0f7a4a1a;color:var(--ok);border:1px solid #0f7a4a55;border-radius:999px;padding:4px 12px;font-weight:700;font-size:13px;font-variant-numeric:tabular-nums}
+.adm .badge i{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
+.lockbar{display:flex;align-items:center;gap:6px;color:var(--mute);font-size:13px;font-weight:600}
+.modal{position:fixed;inset:0;z-index:90;background:#0b162499;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.mbox{background:var(--card);border:1px solid var(--line);border-radius:12px;max-width:380px;width:100%;padding:20px;box-shadow:0 20px 50px #0006}
+.mbox h3{margin:0 0 6px;font-size:18px}
+.mbox p{margin:0 0 14px;color:var(--mute);font-size:14px}
+.mbox label{display:grid;gap:4px;font-size:13px;font-weight:600;color:var(--mute);margin-bottom:10px}
+.mbox input{width:100%;-webkit-user-select:text;user-select:text}
+.mbox .act{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+.mbox .err{color:var(--bad);font-size:13px;font-weight:600;min-height:18px;margin:0}
+.warnico{width:40px;height:40px;border-radius:50%;background:#f59e0b22;color:var(--warn);display:grid;place-items:center;font-weight:800;font-size:20px;margin-bottom:10px}
+body.view .chip:not(.pk),body.view .wchip,body.view td.wsc .st{cursor:not-allowed}
 </style>
 </head>
 <body data-page="board">
@@ -109,10 +141,20 @@ tr.gsum td.ov{background:#f59e0b33!important;color:var(--warn);font-weight:700;b
       </div>
     </div>
     <div class="pal">
-      <span class="lbl" data-t="grpL"></span><select id="gview" aria-label="Group"></select><button class="alt" id="gNew" type="button" data-t="gNew"></button><form id="gForm" class="gform" hidden><input id="gName" maxlength="40" data-tp="gPh" aria-label="Group name"><button type="submit" data-t="gAdd"></button><button type="button" class="alt" id="gCancel" data-t="cancel"></button></form><span class="sep"></span><span class="lbl" data-t="drag"></span>
+      <span class="lbl" data-t="grpL"></span><select id="gview" aria-label="Group"></select>
+      <button class="alt" id="gNew" type="button" data-t="gNew"></button>
+      <form id="gForm" class="gform" hidden><input id="gName" maxlength="40" data-tp="gPh" aria-label="Group name"><button type="submit" data-t="gAdd"></button><button type="button" class="alt" id="gCancel" data-t="cancel"></button></form>
+      <button class="alt" id="copyPrev" type="button"></button>
+      <button class="alt" id="sample" type="button" data-t="sample"></button>
+      <button class="warn" id="clear" type="button" data-t="clear"></button>
+      <div class="adm" id="adm"></div>
+    </div>
+    <div class="pal2">
+      <span class="lbl" data-t="drag"></span>
       <span class="chip" data-new="2">2h</span><span class="chip" data-new="3">3h</span><span class="chip" data-new="4">4h</span><span class="chip" data-new="8">8h</span><span class="chip" data-new="11">11h</span>
-            <button class="alt" id="sample" data-t="sample"></button>
-      <button class="warn" id="clear" data-t="clear"></button>
+      <span class="sep"></span>
+      <span class="lbl" data-t="dragWs"></span>
+      <span class="wchip stW" data-nws="W">W</span><span class="wchip stO" data-nws="O">OFF</span><span class="wchip stR" data-nws="R">REST</span>
       <div class="trash" id="trash" data-t="trash"></div>
     </div>
   </section>
@@ -135,14 +177,30 @@ tr.gsum td.ov{background:#f59e0b33!important;color:var(--warn);font-weight:700;b
 
 <div class="pop" id="pop" role="dialog" aria-label="OT block">
   <div class="pnew" id="pNew"><span class="lbl" data-t="pick"></span><button type="button" class="chip pk" data-h="1">1h</button><button type="button" class="chip pk" data-h="2">2h</button><button type="button" class="chip pk" data-h="3">3h</button><button type="button" class="chip pk" data-h="4">4h</button><button type="button" class="chip pk" data-h="5">5h</button><button type="button" class="chip pk" data-h="8">8h</button><button type="button" class="chip pk" data-h="11">11h</button><button class="alt" type="button" data-pclose aria-label="Close">✕</button></div>
+  <div class="pnew" id="pWs"><span class="lbl" data-t="pickWs"></span><button type="button" class="wchip stW pw" data-w="W">W</button><button type="button" class="wchip stO pw" data-w="O">OFF</button><button type="button" class="wchip stR pw" data-w="R">REST</button><button class="alt" type="button" data-pclose aria-label="Close">✕</button></div>
   <div class="pedit" id="pEdit">
-  <button class="alt" id="pMinus" aria-label="Less hours">−</button><span id="pVal">3</span><button class="alt" id="pPlus" aria-label="More hours">+</button>
-  <button class="alt" id="pCopy" data-t="copy"></button><button class="warn" id="pDel" data-t="del"></button><button class="alt" id="pClose" aria-label="Close">✕</button>
+    <button class="alt" id="pMinus" type="button" aria-label="Less hours">−</button><span id="pVal">3</span><button class="alt" id="pPlus" type="button" aria-label="More hours">+</button>
+    <button class="alt" id="pCopy" type="button" data-t="copy"></button><button class="warn" id="pDel" type="button" data-t="del"></button><button class="alt" type="button" data-pclose aria-label="Close">✕</button>
   </div>
 </div>
+<div class="menu" id="menu" role="menu"></div>
+<div class="tip" id="tip" hidden></div>
 <div class="toast" id="toast"></div>
 
+<div class="modal" id="mLock" role="dialog" aria-modal="true" aria-labelledby="mLockT">
+  <div class="mbox"><div class="warnico">!</div><h3 id="mLockT" data-t="lockT"></h3><p data-t="lockP"></p>
+    <div class="act"><button class="alt" type="button" data-mclose data-t="cancel"></button><button type="button" id="lockLogin" data-t="login"></button></div></div>
+</div>
+<div class="modal" id="mLogin" role="dialog" aria-modal="true" aria-labelledby="mLoginT">
+  <form class="mbox" id="loginForm"><h3 id="mLoginT" data-t="loginT"></h3><p data-t="loginP"></p>
+    <label><span data-t="uid"></span><input id="uid" autocomplete="username" inputmode="numeric"></label>
+    <label><span data-t="pwd"></span><input id="pwd" type="password" autocomplete="current-password"></label>
+    <p class="err" id="lErr"></p>
+    <div class="act"><button class="alt" type="button" data-mclose data-t="cancel"></button><button type="submit" data-t="login"></button></div></form>
+</div>
+
 <script>
+{
 const $ = id => document.getElementById(id);
 const DEF_HOL = `2026-12-11 Sultan of Selangor's Birthday
 2026-12-25 Christmas Day
@@ -150,49 +208,109 @@ const DEF_HOL = `2026-12-11 Sultan of Selangor's Birthday
 2027-02-01 Federal Territory Day
 2027-02-06 Chinese New Year
 2027-02-07 Chinese New Year (2nd day)`;
-const TX = {
- en: {sHrs:"Total OT hours", sCnt:"OT shifts", sPpl:"Staff with OT", drag:"Drag a new OT block:", add:"+ Add staff", sample:"Load sample", clear:"Clear month", clearQ:"Tap again to clear", trash:"Drop here to delete",
-  lgOt:"OT block (hours)", lgWe:"Saturday / Sunday", lgPh:"Public holiday", dept:"Department:", grpL:"Group:", gNew:"+ New group", gAdd:"Create", cancel:"Cancel", gPh:"New group name, e.g. ME Process", gMade:n=>`Group "${n}" created. Use + on the group to add staff.`, gDel:"Delete group", pick:"OT hours:", wsName:{W:"Working day",O:"Off day",R:"Rest day"}, lgWs:"Work / Off / Rest day (tap to change)", all:"All", gtot:"Group total", addTo:"Add staff to", lgOv:"Overlap: 2+ staff in the same group on the same day", ovTip:n=>`${n} staff from this group on OT this day`, ovN:n=>`${n} overlap day${n>1?"s":""}`, lgTip:"Tap an empty cell to add OT. Tap a block to change hours, copy or delete. Drop on another block to swap. Daily total row: hours / people (p).",
-  hTitle:"Public holidays this month", hEdit:"Edit holiday list", hHint:"One per line: YYYY-MM-DD Name. Shared with the Horse Calendar.", hSave:"Save holidays", copy:"Copy", del:"Delete",
-  staff:"Staff", hol:"Holiday", total:"Total", dtot:"Daily total", day:"day", days:"days", noHol:"No public holidays in this month.", sun:"Falls on Sunday: check replacement holiday", sat:"Falls on Saturday",
-  tDel:"OT block deleted", tCopy:v=>`Copied ${v}h. Tap empty cells to paste. Press Esc or tap outside the board to stop.`, tRm:n=>`${n} removed`, rmQ:"Remove?", tSample:"Sample plan loaded (December 2026)", tClr:"Month cleared", tHol:"Holidays saved", person:"Person",
-  WD:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], MN:["January","February","March","April","May","June","July","August","September","October","November","December"]},
- ms: {sHrs:"Jumlah jam OT", sCnt:"Syif OT", sPpl:"Pekerja ada OT", drag:"Heret blok OT baru:", add:"+ Tambah pekerja", sample:"Isi contoh", clear:"Kosongkan bulan", clearQ:"Tekan lagi untuk kosongkan", trash:"Lepas di sini untuk padam",
-  lgOt:"Blok OT (jam)", lgWe:"Sabtu / Ahad", lgPh:"Cuti umum", dept:"Jabatan:", grpL:"Grup:", gNew:"+ Grup baru", gAdd:"Cipta", cancel:"Batal", gPh:"Nama grup baru, cth ME Process", gMade:n=>`Grup "${n}" dicipta. Guna + pada grup untuk tambah pekerja.`, gDel:"Padam grup", pick:"Jam OT:", wsName:{W:"Hari bekerja",O:"Hari cuti (OFF)",R:"Hari rehat (REST)"}, lgWs:"Kerja / Off / Rehat (ketik untuk ubah)", all:"Semua", gtot:"Jumlah grup", addTo:"Tambah pekerja ke", lgOv:"Bertindih: 2+ pekerja grup sama pada hari sama", ovTip:n=>`${n} pekerja grup ini OT hari ini`, ovN:n=>`${n} hari bertindih`, lgTip:"Ketik petak kosong untuk tambah OT. Ketik blok untuk ubah jam, salin atau padam. Lepas atas blok lain untuk tukar. Baris jumlah harian: jam / orang (p).",
-  hTitle:"Cuti umum bulan ini", hEdit:"Ubah senarai cuti", hHint:"Satu baris setiap cuti: YYYY-MM-DD Nama. Dikongsi dengan Kalendar Kuda.", hSave:"Simpan cuti", copy:"Salin", del:"Padam",
-  staff:"Pekerja", hol:"Cuti", total:"Jumlah", dtot:"Jumlah harian", day:"hari", days:"hari", noHol:"Tiada cuti umum bulan ini.", sun:"Jatuh hari Ahad: semak cuti ganti", sat:"Jatuh hari Sabtu",
-  tDel:"Blok OT dipadam", tCopy:v=>`${v}j disalin. Ketik petak kosong untuk tampal. Tekan Esc atau ketik luar papan untuk berhenti.`, tRm:n=>`${n} dibuang`, rmQ:"Buang?", tSample:"Contoh dimuatkan (Disember 2026)", tClr:"Bulan dikosongkan", tHol:"Cuti disimpan", person:"Person",
-  WD:["Ahd","Isn","Sel","Rab","Kha","Jum","Sab"], MN:["Januari","Februari","Mac","April","Mei","Jun","Julai","Ogos","September","Oktober","November","Disember"]}
-};
-let X = TX[(window.HUB && HUB.lang) || "en"] || TX.en;
-function applyT() { X = TX[(window.HUB && HUB.lang) || "en"] || TX.en; document.querySelectorAll("[data-t]").forEach(e => e.textContent = X[e.dataset.t]); document.querySelectorAll("[data-tp]").forEach(e => e.placeholder = X[e.dataset.tp]); }
-document.addEventListener("hub:lang", () => { applyT(); render(); });
 const pad = n => String(n).padStart(2, "0");
 const iso = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+
+// ---------- text ----------
+const TX = {
+ en: {sHrs:"Total OT hours", sCnt:"OT shifts", sPpl:"Staff with OT", drag:"OT block:", dragWs:"Work status:", sample:"Load sample", clear:"Clear month", clearQ:"Tap again to clear", trash:"Drop here to delete",
+  dept:"Department:", grpL:"Group:", all:"All groups", gNew:"+ New group", gAdd:"Create", cancel:"Cancel", gPh:"New group name, e.g. ME Process", gMade:n=>`Group "${n}" created. Use + on the group to add staff.`, gDel:"Delete group", addTo:"Add staff to",
+  lgOt:"OT block (hours)", lgWe:"Saturday / Sunday", lgPh:"Public holiday (tap the red dot)", lgWs:"Work / Off / Rest day", lgOv:"Everyone in the group on OT the same day",
+  lgTip:"Drag blocks from the bars above, tap an empty cell to choose, or drag a block sideways to move it. Tap a staff name for Horse Calendar / Plan vs Actual.",
+  hTitle:"Public holidays this month", hEdit:"Edit holiday list", hHint:"One per line: YYYY-MM-DD Name. Shared with the Horse Calendar.", hSave:"Save holidays", copy:"Copy", del:"Delete",
+  staff:"Staff", total:"Total", dtot:"Daily total", gtot:"Group total", day:"day", days:"days", noHol:"No public holidays in this month.", sun:"Falls on Sunday: check replacement holiday", sat:"Falls on Saturday",
+  tDel:"OT block deleted", tCopy:v=>`Copied ${v}h. Tap empty cells to paste. Press Esc or tap outside the board to stop.`, tRm:n=>`${n} removed`, rmQ:"Remove?", tSample:"Sample plan loaded (December 2026)", tClr:"Month cleared", tHol:"Holidays saved", person:"Person",
+  copyPrev:m=>`⧉ Copy from ${m}`, copyQ:"Tap again to replace this month", tCopied:(a,b,n)=>`Copied ${a} → ${b}: ${n} OT blocks. Adjust and you are done.`, noSrc:m=>`${m} has no OT to copy.`, pick:"OT hours:", pickWs:"Work status:", wsName:{W:"Working day",O:"Off day",R:"Rest day"}, ovTip:n=>`${n} staff from this group on OT this day`, ovN:n=>`${n} day${n>1?"s":""} all on OT`,
+  mOpen:"Open this person in", mCal:"Horse Calendar", mPlan:"Plan vs Actual", mRen:"Rename", mDel:"Remove from board", renQ:"New name",
+  adminIn:"Admin login", adminOn:"Admin", adminOut:"Exit admin", viewOnly:"View only", lockT:"Admin permission needed", lockP:"This board is locked. Only an admin can add, move or change OT blocks and work status.", login:"Log in", loginT:"Admin login", loginP:"Enter your admin ID and password.", uid:"Admin ID", pwd:"Password", bad:"Wrong ID or password.", tIn:"Admin mode on. It ends after 3 minutes without activity.", tOut:"Admin mode ended.", tIdle:"Admin mode ended after 3 minutes without activity.", left:"left",
+  WD:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], MN:["January","February","March","April","May","June","July","August","September","October","November","December"]},
+ ms: {sHrs:"Jumlah jam OT", sCnt:"Syif OT", sPpl:"Pekerja ada OT", drag:"Blok OT:", dragWs:"Status kerja:", sample:"Isi contoh", clear:"Kosongkan bulan", clearQ:"Tekan lagi untuk kosongkan", trash:"Lepas di sini untuk padam",
+  dept:"Jabatan:", grpL:"Grup:", all:"Semua grup", gNew:"+ Grup baru", gAdd:"Cipta", cancel:"Batal", gPh:"Nama grup baru, cth ME Process", gMade:n=>`Grup "${n}" dicipta. Guna + pada grup untuk tambah pekerja.`, gDel:"Padam grup", addTo:"Tambah pekerja ke",
+  lgOt:"Blok OT (jam)", lgWe:"Sabtu / Ahad", lgPh:"Cuti umum (ketik titik merah)", lgWs:"Kerja / Off / Rehat", lgOv:"Semua ahli grup OT pada hari sama",
+  lgTip:"Heret blok dari bar di atas, ketik petak kosong untuk pilih, atau heret blok ke tepi untuk alih. Ketik nama pekerja untuk Kalendar Kuda / Plan vs Actual.",
+  hTitle:"Cuti umum bulan ini", hEdit:"Ubah senarai cuti", hHint:"Satu baris setiap cuti: YYYY-MM-DD Nama. Dikongsi dengan Kalendar Kuda.", hSave:"Simpan cuti", copy:"Salin", del:"Padam",
+  staff:"Pekerja", total:"Jumlah", dtot:"Jumlah harian", gtot:"Jumlah grup", day:"hari", days:"hari", noHol:"Tiada cuti umum bulan ini.", sun:"Jatuh hari Ahad: semak cuti ganti", sat:"Jatuh hari Sabtu",
+  tDel:"Blok OT dipadam", tCopy:v=>`${v}j disalin. Ketik petak kosong untuk tampal. Tekan Esc atau ketik luar papan untuk berhenti.`, tRm:n=>`${n} dibuang`, rmQ:"Buang?", tSample:"Contoh dimuatkan (Disember 2026)", tClr:"Bulan dikosongkan", tHol:"Cuti disimpan", person:"Person",
+  copyPrev:m=>`⧉ Salin dari ${m}`, copyQ:"Tekan lagi untuk ganti bulan ini", tCopied:(a,b,n)=>`Disalin ${a} → ${b}: ${n} blok OT. Ubah sikit dan siap.`, noSrc:m=>`${m} tiada OT untuk disalin.`, pick:"Jam OT:", pickWs:"Status kerja:", wsName:{W:"Hari bekerja",O:"Hari cuti (OFF)",R:"Hari rehat (REST)"}, ovTip:n=>`${n} pekerja grup ini OT hari ini`, ovN:n=>`${n} hari semua OT`,
+  mOpen:"Buka pekerja ini di", mCal:"Kalendar Kuda", mPlan:"Plan vs Actual", mRen:"Tukar nama", mDel:"Buang dari papan", renQ:"Nama baru",
+  adminIn:"Log masuk admin", adminOn:"Admin", adminOut:"Keluar admin", viewOnly:"Lihat sahaja", lockT:"Perlu kebenaran admin", lockP:"Papan ini dikunci. Hanya admin boleh tambah, alih atau ubah blok OT dan status kerja.", login:"Log masuk", loginT:"Log masuk admin", loginP:"Masukkan ID dan kata laluan admin.", uid:"ID admin", pwd:"Kata laluan", bad:"ID atau kata laluan salah.", tIn:"Mod admin aktif. Tamat selepas 3 minit tanpa aktiviti.", tOut:"Mod admin tamat.", tIdle:"Mod admin tamat selepas 3 minit tanpa aktiviti.", left:"lagi",
+  WD:["Ahd","Isn","Sel","Rab","Kha","Jum","Sab"], MN:["Januari","Februari","Mac","April","Mei","Jun","Julai","Ogos","September","Oktober","November","Disember"]}
+};
+let X = TX.en;
+function applyT() { X = TX[(window.HUB && HUB.lang) || "en"] || TX.en; document.querySelectorAll("[data-t]").forEach(e => e.textContent = X[e.dataset.t]); document.querySelectorAll("[data-tp]").forEach(e => e.placeholder = X[e.dataset.tp]); }
 
 // ---------- state ----------
-const KEY = "otb:v3";
+const KEY = "otb:v4";
 let S = null;
+function seeded(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
 function sample() {
   const groups = [{id: "eq", name: "ME Equipment"}, {id: "tc", name: "ME TC"}];
   const people = ["Person A","Person B","Person C","Person D","Person E","Person F"].map((n, i) => ({id: "p" + (i + 1), name: n, g: i < 3 ? "eq" : "tc"}));
-  const ot = {};
-  // Real pattern: Mon-Fri work, Sat OFF, Sun REST; each person works 2 Saturdays (OFF day) x 8h.
-  // December 2026 Saturdays: 5, 12, 19, 26. 3 people x 2 Saturdays = 6 slots on 4 Saturdays.
+  const y = 2026, m = 11, nd = 31, H = holidays(DEF_HOL), rnd = seeded(20261201), ot = {};
+  // Each person: 3 OT per week (Mon-Sun). Saturdays (OFF day) are 8h, twice a month; the rest are weekday OT after the shift.
   const sat = {p1: [5, 19], p2: [12, 26], p3: [5, 26], p4: [5, 19], p5: [12, 26], p6: [12, 19]};
-  for (const [p, ds] of Object.entries(sat)) for (const d of ds) ot[`${p}|2026-12-${pad(d)}`] = 8;
-  return {y: 2026, m: 11, dept: "ME", groups, people, ot, ws: {}, view: "all"};
+  const weeks = []; let cur = [];
+  for (let d = 1; d <= nd; d++) { cur.push(d); if (new Date(y, m, d).getDay() === 0 || d === nd) { weeks.push(cur); cur = []; } }
+  for (const G of groups) {
+    const mem = people.filter(P => P.g === G.id);
+    for (const wk of weeks) {
+      const load = {};
+      const order = mem.slice().sort(() => rnd() - .5);
+      for (const P of order) {
+        let need = 3;
+        for (const d of wk) if (sat[P.id].includes(d)) { ot[`${P.id}|${iso(y, m, d)}`] = 8; load[d] = (load[d] || 0) + 1; need--; }
+        const cand = wk.filter(d => { const w = new Date(y, m, d).getDay(); return w >= 1 && w <= 5 && !H[iso(y, m, d)]; })
+          .map(d => ({d, r: rnd()})).sort((a, b) => (load[a.d] || 0) - (load[b.d] || 0) || a.r - b.r);
+        for (const {d} of cand.slice(0, need)) { ot[`${P.id}|${iso(y, m, d)}`] = [3, 3, 3, 2, 4][Math.floor(rnd() * 5)]; load[d] = (load[d] || 0) + 1; }
+      }
+    }
+  }
+  return {y, m, dept: "ME", groups, people, ot, ws: {}, view: "all"};
 }
-function load() { try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) {} if (!S || !S.people || !S.groups) S = sample(); if (!S.ws) S.ws = {}; }
-const WS_NEXT = {W: "O", O: "R", R: "W"};
-function wsOf(P, D) { return S.ws[`${P.id}|${D.k}`] || (D.w === 0 ? "R" : D.w === 6 ? "O" : "W"); }
+function load() { try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) {} if (!S || !S.people || !S.groups) { S = sample(); save(); } if (!S.ws) S.ws = {}; }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 function holText() { try { return localStorage.getItem("kk-hol") || DEF_HOL; } catch (e) { return DEF_HOL; } }
-function holidays() {
+function holidays(txt) {
   const h = {};
-  for (const l of holText().split(/\r?\n/)) { const m = l.match(/(\d{4})-(\d{1,2})-(\d{1,2})\s*(.*)/); if (m) h[iso(+m[1], +m[2] - 1, +m[3])] = m[4].trim() || "Public holiday"; }
+  for (const l of (txt || holText()).split(/\r?\n/)) { const m = l.match(/(\d{4})-(\d{1,2})-(\d{1,2})\s*(.*)/); if (m) h[iso(+m[1], +m[2] - 1, +m[3])] = m[4].trim() || "Public holiday"; }
   return h;
 }
+const defWs = w => w === 0 ? "R" : w === 6 ? "O" : "W";
+const wkOf = k => new Date(k + "T12:00").getDay();
+function wsOf(pid, k) { return S.ws[`${pid}|${k}`] || defWs(wkOf(k)); }
+function setWs(pid, k, v) { const key = `${pid}|${k}`; if (v === defWs(wkOf(k))) delete S.ws[key]; else S.ws[key] = v; }
+
+// ---------- admin ----------
+const IDLE = 180;
+let admin = false, idleLeft = IDLE, idleT = null;
+try { const u = +sessionStorage.getItem("otb-admin-until"); if (u > Date.now()) { admin = true; idleLeft = Math.round((u - Date.now()) / 1000); } } catch (e) {}
+function paintAdmin() {
+  document.body.classList.toggle("view", !admin);
+  const mm = `${Math.floor(idleLeft / 60)}:${pad(idleLeft % 60)}`;
+  $("adm").innerHTML = admin
+    ? `<span class="badge" title="${X.tIn}"><i></i>${X.adminOn} · ${mm} ${X.left}</span><button class="alt" type="button" id="aOut">${X.adminOut}</button>`
+    : `<span class="lockbar">🔒 ${X.viewOnly}</span><button type="button" id="aIn">${X.adminIn}</button>`;
+}
+function startAdmin() { admin = true; idleLeft = IDLE; tick(); clearInterval(idleT); idleT = setInterval(tick, 1000); toast(X.tIn); }
+function stopAdmin(msg) { admin = false; clearInterval(idleT); try { sessionStorage.removeItem("otb-admin-until"); } catch (e) {} closePop(); paintAdmin(); toast(msg || X.tOut); }
+function tick() { if (!admin) return; idleLeft--; if (idleLeft <= 0) return stopAdmin(X.tIdle); try { sessionStorage.setItem("otb-admin-until", Date.now() + idleLeft * 1000); } catch (e) {} paintAdmin(); }
+function poke() { if (admin) { idleLeft = IDLE; } }
+["pointerdown", "keydown", "wheel"].forEach(ev => document.addEventListener(ev, poke, {passive: true}));
+if (admin) { clearInterval(idleT); idleT = setInterval(tick, 1000); }
+function can() { if (admin) return true; openModal("mLock"); return false; }
+function openModal(id) { $(id).classList.add("on"); if (id === "mLogin") { $("lErr").textContent = ""; $("uid").value = ""; $("pwd").value = ""; setTimeout(() => $("uid").focus(), 50); } else setTimeout(() => $("lockLogin").focus(), 50); }
+function closeModal() { document.querySelectorAll(".modal").forEach(m => m.classList.remove("on")); }
+document.addEventListener("click", e => {
+  if (e.target.closest("[data-mclose]") || e.target.classList.contains("modal")) closeModal();
+  if (e.target.closest("#aIn") || e.target.closest("#lockLogin")) { closeModal(); openModal("mLogin"); }
+  if (e.target.closest("#aOut")) stopAdmin();
+});
+$("loginForm").onsubmit = e => {
+  e.preventDefault();
+  if ($("uid").value.trim() === "1" && $("pwd").value === "1") { closeModal(); startAdmin(); }
+  else { $("lErr").textContent = X.bad; $("pwd").value = ""; $("pwd").focus(); }
+};
 
 // ---------- render ----------
 function render() {
@@ -202,35 +320,28 @@ function render() {
   for (let d = 1; d <= nd; d++) { const k = iso(y, m, d), w = new Date(y, m, d).getDay(); days.push({d, k, w, hol: H[k], wk: w === 0 || w === 6}); }
   const cls = D => D.hol ? "hol" : D.wk ? "wkend" : "";
   let h = `<thead><tr><th class="nm">${X.staff}</th>`;
-  for (const D of days) h += `<th class="day ${cls(D)}"${D.hol ? ` title="${D.hol}"` : ""}><span class="d">${D.d}</span><span class="w">${X.WD[D.w]}</span></th>`;
-  h += `<th class="tot">${X.total}</th></tr><tr class="hl"><th class="nm" style="font-size:12px;color:var(--mute)">${X.hol}</th>`;
-  for (const D of days) h += `<th class="${cls(D)}">${D.hol ? `<span class="hp" title="${D.hol} (${X.WD[D.w]})">${short(D.hol)}</span>` : ""}</th>`;
-  h += `<th class="tot"></th></tr></thead><tbody>`;
+  for (const D of days) h += `<th class="day ${cls(D)}"><span class="d">${D.d}</span><span class="w">${X.WD[D.w]}</span>${D.hol ? `<button type="button" class="hico" data-hol="${D.k}" aria-label="${esc(D.hol)}">!</button>` : ""}</th>`;
+  h += `<th class="tot">${X.total}</th></tr></thead><tbody>`;
   const dayTot = days.map(() => ({h: 0, n: 0}));
   let gH = 0, gN = 0, ppl = 0, shown = 0;
-  const groups = S.groups.filter(G => S.view === "all" || S.view === G.id);
-  for (const G of groups) {
-    const mem = S.people.filter(P => P.g === G.id);
-    const gt = days.map(() => ({h: 0, n: 0}));
-    h += `<tr class="grp"><th class="nm"><span class="gname">${esc(G.name)}</span> <span class="gcnt">${mem.length}</span><button class="gadd" data-add="${G.id}" aria-label="${X.addTo} ${esc(G.name)}" title="${X.addTo} ${esc(G.name)}">+</button><button class="x gdel" data-gdel="${G.id}" aria-label="${X.gDel} ${esc(G.name)}" title="${X.gDel}">×</button></th><td class="grow" colspan="${days.length + 1}"></td></tr>`;
+  for (const G of S.groups.filter(G => S.view === "all" || S.view === G.id)) {
+    const mem = S.people.filter(P => P.g === G.id), gt = days.map(() => ({h: 0, n: 0}));
+    h += `<tr class="grp"><th class="nm"><span class="gname">${esc(G.name)}</span> <span class="gcnt">${mem.length}</span><button type="button" class="gadd" data-add="${G.id}" title="${X.addTo} ${esc(G.name)}" aria-label="${X.addTo} ${esc(G.name)}">+</button><button type="button" class="x gdel" data-gdel="${G.id}" title="${X.gDel}" aria-label="${X.gDel} ${esc(G.name)}">×</button></th><td class="grow" colspan="${days.length + 1}"></td></tr>`;
     for (const P of mem) {
-      let pH = 0, pN = 0; shown++;
-      h += `<tr class="wsr"><th class="nm" rowspan="2"><span class="pn" contenteditable="true" spellcheck="false" data-p="${P.id}">${esc(P.name)}</span><button class="x" data-del="${P.id}" aria-label="Remove ${esc(P.name)}">×</button></th>`;
-      days.forEach(D => { const w = wsOf(P, D); h += `<td class="wsc ${cls(D)}" data-ws="${P.id}|${D.k}" title="${X.wsName[w]}"><span class="st st${w}">${w}</span></td>`; });
-      let rowOt = "";
+      let pH = 0, pN = 0, rowOt = ""; shown++;
+      h += `<tr class="wsr"><th class="nm" rowspan="2"><span class="pn" role="button" tabindex="0" data-pm="${P.id}">${esc(P.name)}</span></th>`;
+      for (const D of days) { const w = wsOf(P.id, D.k); h += `<td class="wsc ${cls(D)}" data-p="${P.id}" data-k="${D.k}" title="${X.wsName[w]}"><span class="st st${w}" data-ws="${w}" data-p="${P.id}" data-k="${D.k}">${w}</span></td>`; }
       days.forEach((D, i) => {
         const v = S.ot[`${P.id}|${D.k}`];
         if (v) { pH += v; pN++; dayTot[i].h += v; dayTot[i].n++; gt[i].h += v; gt[i].n++; }
         rowOt += `<td class="cell ${cls(D)}" data-p="${P.id}" data-k="${D.k}">${v ? `<span class="chip" data-p="${P.id}" data-k="${D.k}">${v}</span>` : ""}</td>`;
       });
-      h += `<td class="tot" rowspan="2">__TOT__</td></tr><tr class="otr">${rowOt}</tr>`;
-      if (pN) ppl++;
-      gH += pH; gN += pN;
-      h = h.replace("__TOT__", `${pH}h<small>${pN} ${pN === 1 ? X.day : X.days}</small>`);
+      if (pN) ppl++; gH += pH; gN += pN;
+      h += `<td class="tot" rowspan="2">${pH}h<small>${pN} ${pN === 1 ? X.day : X.days}</small></td></tr><tr class="otr">${rowOt}</tr>`;
     }
-    const gSum = gt.reduce((a, b) => a + b.h, 0), ov = gt.filter(t => t.n > 1).length;
+    const lim = Math.max(2, mem.length), gSum = gt.reduce((a, b) => a + b.h, 0), ov = gt.filter(t => t.n >= lim).length;
     h += `<tr class="gsum"><th class="nm">${X.gtot}</th>`;
-    days.forEach((D, i) => h += `<td class="${cls(D)}${gt[i].n > 1 ? " ov" : ""}"${gt[i].n > 1 ? ` title="${X.ovTip(gt[i].n)}"` : ""}>${gt[i].n ? gt[i].n + "p" : ""}</td>`);
+    days.forEach((D, i) => h += `<td class="${cls(D)}${gt[i].n >= lim ? " ov" : ""}"${gt[i].n ? ` title="${X.ovTip(gt[i].n)}"` : ""}>${gt[i].n ? gt[i].n + "p" : ""}</td>`);
     h += `<td class="tot">${gSum}h${ov ? `<small class="ovc">${X.ovN(ov)}</small>` : ""}</td></tr>`;
   }
   h += `</tbody><tfoot><tr><td class="nm">${X.dtot}</td>`;
@@ -239,114 +350,183 @@ function render() {
   $("grid").innerHTML = h;
   $("sHrs").textContent = gH; $("sCnt").textContent = gN; $("sPpl").textContent = `${ppl} / ${shown}`;
   $("gview").innerHTML = [["all", X.all], ...S.groups.map(G => [G.id, G.name])].map(([v, t]) => `<option value="${v}"${v === S.view ? " selected" : ""}>${esc(t)}</option>`).join("");
-  // holiday list
   const list = days.filter(D => D.hol);
   $("hlist").innerHTML = list.length ? list.map(D => `<li><span class="dt">${D.d} ${X.MN[m].slice(0, 3)} (${X.WD[D.w]})</span><span>${esc(D.hol)}</span>${D.w === 0 ? `<span class="tag">${X.sun}</span>` : D.w === 6 ? `<span class="tag">${X.sat}</span>` : ""}</li>`).join("") : `<li style="color:var(--mute)">${X.noHol}</li>`;
   $("hol").value = holText();
+  const pv = prevYM(); if (!cpArm) $("copyPrev").textContent = X.copyPrev(`${X.MN[pv.m].slice(0, 3)} ${pv.y}`);
+  paintAdmin();
 }
-function short(n) { return n.replace(/'s Birthday/i, "").replace(/\(.*?\)/g, "").split(/\s+/).filter(w => w && !/^(of|the|day)$/i.test(w)).slice(0, 2).join(" "); }
-function esc(s) { return String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c])); }
-function toast(t) { const e = $("toast"); e.textContent = t; e.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove("on"), 1800); }
+function toast(t) { const e = $("toast"); e.textContent = t; e.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove("on"), 2200); }
 
-// ---------- drag & drop (mouse, touch, pen) ----------
+// ---------- holiday tooltip ----------
+function showTip(b) {
+  const k = b.dataset.hol, H = holidays(), r = b.getBoundingClientRect(), t = $("tip");
+  t.innerHTML = `${esc(H[k] || "")}<small>${+k.slice(8)} ${X.MN[+k.slice(5, 7) - 1]} · ${X.WD[wkOf(k)]}</small>`; t.hidden = false;
+  t.style.left = Math.max(8, Math.min(innerWidth - t.offsetWidth - 8, r.left + r.width / 2 - t.offsetWidth / 2)) + "px"; t.style.top = (r.bottom + 8) + "px";
+}
+document.addEventListener("pointerover", e => { const b = e.target.closest(".hico"); if (b) showTip(b); });
+document.addEventListener("pointerout", e => { if (e.target.closest(".hico")) $("tip").hidden = true; });
+document.addEventListener("click", e => { const b = e.target.closest(".hico"); if (b) { showTip(b); clearTimeout(showTip.t); showTip.t = setTimeout(() => $("tip").hidden = true, 3000); } });
+
+// ---------- drag & drop: OT blocks and work status (mouse, touch, pen) ----------
 let drag = null, pasteVal = 0;
 document.addEventListener("pointerdown", e => {
-  const c = e.target.closest(".chip");
-  if (!c || c.classList.contains("pk")) return;
+  const ot = e.target.closest(".chip"), ws = e.target.closest(".wchip,td.wsc .st");
+  const el = ot && !ot.classList.contains("pk") ? ot : ws && !ws.classList.contains("pw") ? ws : null;
+  if (!el) return;
   e.preventDefault();
-  drag = {src: c, x0: e.clientX, y0: e.clientY, moved: false, val: c.dataset.new ? +c.dataset.new : S.ot[`${c.dataset.p}|${c.dataset.k}`], from: c.dataset.new ? null : {p: c.dataset.p, k: c.dataset.k}, ghost: null, tgt: null};
+  const kind = el.classList.contains("chip") ? "ot" : "ws";
+  const fresh = kind === "ot" ? el.dataset.new : el.dataset.nws;
+  const val = kind === "ot" ? (fresh ? +fresh : S.ot[`${el.dataset.p}|${el.dataset.k}`]) : (fresh || el.dataset.ws);
+  drag = {kind, el, val, x0: e.clientX, y0: e.clientY, moved: false, from: fresh ? null : {p: el.dataset.p, k: el.dataset.k}, ghost: null, tgt: null};
 });
 document.addEventListener("pointermove", e => {
   if (!drag) return;
   if (!drag.moved && Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) < 6) return;
-  if (!drag.moved) { drag.moved = true; closePop(); const g = drag.src.cloneNode(true); g.textContent = drag.val + "h"; g.classList.add("ghost"); document.body.append(g); drag.ghost = g; if (drag.from) drag.src.style.opacity = .3; }
+  if (!drag.moved) {
+    if (!admin) { drag = null; return void can(); }
+    drag.moved = true; closePop();
+    const g = document.createElement("span"); g.className = (drag.kind === "ot" ? "chip" : `wchip st${drag.val}`) + " ghost"; g.textContent = drag.kind === "ot" ? drag.val + "h" : drag.val;
+    document.body.append(g); drag.ghost = g; if (drag.from) drag.el.style.opacity = .3;
+  }
   drag.ghost.style.left = e.clientX + "px"; drag.ghost.style.top = e.clientY + "px";
-  const el = document.elementFromPoint(e.clientX, e.clientY);
-  const cell = el && el.closest("td.cell"), tr = el && el.closest("#trash");
+  const at = document.elementFromPoint(e.clientX, e.clientY);
+  const cell = at && at.closest(drag.kind === "ot" ? "td.cell" : "td.wsc"), tr = at && at.closest("#trash");
   if (drag.tgt && drag.tgt !== cell) drag.tgt.classList.remove("tgt");
   drag.tgt = cell; if (cell) cell.classList.add("tgt");
   $("trash").classList.toggle("hot", !!tr); drag.trash = !!tr;
-  autoScroll(e);
+  const w = $("wrap"), r = w.getBoundingClientRect();
+  if (e.clientX > r.right - 40) w.scrollLeft += 14; else if (e.clientX < r.left + 190 && e.clientX > r.left) w.scrollLeft -= 14;
 });
-document.addEventListener("pointerup", e => {
+document.addEventListener("pointerup", () => {
   if (!drag) return;
   const d = drag; drag = null;
   if (d.ghost) d.ghost.remove();
   $("trash").classList.remove("hot");
   if (d.tgt) d.tgt.classList.remove("tgt");
-  if (!d.moved) { if (d.from) openPop(d.from, d.src); return; }
-  if (d.trash && d.from) { delete S.ot[`${d.from.p}|${d.from.k}`]; toast(X.tDel); }
-  else if (d.tgt) {
-    const to = `${d.tgt.dataset.p}|${d.tgt.dataset.k}`;
-    if (d.from) {
-      const fr = `${d.from.p}|${d.from.k}`;
-      if (fr !== to) { const old = S.ot[to]; S.ot[to] = d.val; if (old) S.ot[fr] = old; else delete S.ot[fr]; }
-    } else S.ot[to] = d.val;
+  if (!d.moved) {
+    if (!d.from) return;                               // tap on palette: nothing
+    if (!can()) return;
+    if (d.kind === "ot") openPop(d.from, d.el, "edit"); else openPop(d.from, d.el, "ws");
+    return;
+  }
+  if (d.kind === "ot") {
+    if (d.trash && d.from) { delete S.ot[`${d.from.p}|${d.from.k}`]; toast(X.tDel); }
+    else if (d.tgt) {
+      const to = `${d.tgt.dataset.p}|${d.tgt.dataset.k}`;
+      if (d.from) { const fr = `${d.from.p}|${d.from.k}`; if (fr !== to) { const old = S.ot[to]; S.ot[to] = d.val; if (old) S.ot[fr] = old; else delete S.ot[fr]; } }
+      else S.ot[to] = d.val;
+    }
+  } else {
+    if (d.trash && d.from) setWs(d.from.p, d.from.k, defWs(wkOf(d.from.k)));
+    else if (d.tgt) {
+      const tp = d.tgt.dataset.p, tk = d.tgt.dataset.k;
+      if (d.from) { const old = wsOf(tp, tk); setWs(tp, tk, d.val); setWs(d.from.p, d.from.k, old); }   // move = swap
+      else setWs(tp, tk, d.val);
+    }
   }
   save(); render();
 });
-function autoScroll(e) {
-  const w = $("wrap"), r = w.getBoundingClientRect(), m = 40;
-  if (e.clientX > r.right - m) w.scrollLeft += 14; else if (e.clientX < r.left + 150 + m && e.clientX > r.left) w.scrollLeft -= 14;
-  if (e.clientY > r.bottom - m) w.scrollTop += 14; else if (e.clientY < r.top + m && e.clientY > r.top) w.scrollTop -= 14;
-}
 
-// ---------- popover: edit hours, copy, delete ----------
-let popAt = null, popMode = "edit";
+// ---------- popover: choose hours / status, edit block ----------
+let popAt = null;
 function openPop(at, el, mode) {
-  popAt = at; popMode = mode || "edit"; $("pNew").style.display = popMode === "new" ? "flex" : "none"; $("pEdit").style.display = popMode === "new" ? "none" : "flex"; const r = el.getBoundingClientRect(), p = $("pop");
-  if (popMode === "edit") $("pVal").textContent = S.ot[`${at.p}|${at.k}`] + "h";
+  popAt = at; const p = $("pop");
+  $("pNew").style.display = mode === "new" ? "flex" : "none"; $("pWs").style.display = mode === "ws" ? "flex" : "none"; $("pEdit").style.display = mode === "edit" ? "flex" : "none";
+  if (mode === "edit") $("pVal").textContent = S.ot[`${at.p}|${at.k}`] + "h";
   p.classList.add("on");
-  const pw = p.offsetWidth;
+  const r = el.getBoundingClientRect(), pw = p.offsetWidth;
   p.style.left = Math.max(8, Math.min(innerWidth - pw - 8, r.left + r.width / 2 - pw / 2)) + "px";
-  p.style.top = (r.bottom + 8 + 60 > innerHeight ? r.top - 60 : r.bottom + 8) + "px";
+  p.style.top = (r.bottom + 70 > innerHeight ? r.top - 58 : r.bottom + 8) + "px";
 }
 function closePop() { $("pop").classList.remove("on"); popAt = null; }
-function bump(n) { const k = `${popAt.p}|${popAt.k}`; S.ot[k] = Math.max(1, Math.min(16, S.ot[k] + n)); $("pVal").textContent = S.ot[k] + "h"; save(); const at = popAt; render(); popAt = at; }
+function bump(n) { const k = `${popAt.p}|${popAt.k}`; S.ot[k] = Math.max(1, Math.min(16, S.ot[k] + n)); $("pVal").textContent = S.ot[k] + "h"; save(); const a = popAt; render(); popAt = a; }
 $("pMinus").onclick = () => bump(-1);
 $("pPlus").onclick = () => bump(1);
 $("pDel").onclick = () => { delete S.ot[`${popAt.p}|${popAt.k}`]; save(); closePop(); render(); toast(X.tDel); };
-$("pClose").onclick = closePop;
-$("pCopy").onclick = () => { pasteVal = S.ot[`${popAt.p}|${popAt.k}`]; closePop(); document.body.classList.add("pasting"); document.querySelectorAll("td.cell").forEach(c => c.classList.add("paste")); toast(X.tCopy(pasteVal)); };
+$("pCopy").onclick = () => { pasteVal = S.ot[`${popAt.p}|${popAt.k}`]; closePop(); document.querySelectorAll("td.cell").forEach(c => c.classList.add("paste")); toast(X.tCopy(pasteVal)); };
+const stopPaste = () => { pasteVal = 0; document.querySelectorAll("td.cell").forEach(x => x.classList.remove("paste")); };
 document.addEventListener("click", e => {
+  if (e.target.closest("[data-pclose]")) return closePop();
+  const pk = e.target.closest(".pk"); if (pk && popAt) { S.ot[`${popAt.p}|${popAt.k}`] = +pk.dataset.h; save(); closePop(); render(); return; }
+  const pw = e.target.closest(".pw"); if (pw && popAt) { setWs(popAt.p, popAt.k, pw.dataset.w); save(); closePop(); render(); return; }
+  const c = e.target.closest("td.cell"), wc = e.target.closest("td.wsc");
   if (pasteVal) {
-    const c = e.target.closest("td.cell");
     if (c && !c.querySelector(".chip")) { S.ot[`${c.dataset.p}|${c.dataset.k}`] = pasteVal; save(); render(); document.querySelectorAll("td.cell").forEach(x => x.classList.add("paste")); return; }
-    if (!c) { pasteVal = 0; document.querySelectorAll("td.cell").forEach(x => x.classList.remove("paste")); }
+    if (!c) stopPaste();
   }
-  if (popAt && !e.target.closest(".pop") && !e.target.closest(".chip") && !e.target.closest("td.cell")) closePop();
-  const c = e.target.closest("td.cell");
-  if (c && !pasteVal && !c.querySelector(".chip")) openPop({p: c.dataset.p, k: c.dataset.k}, c, "new");
+  if (popAt && !e.target.closest(".pop") && !e.target.closest(".chip") && !c && !wc) closePop();
+  if (c && !c.querySelector(".chip") && can()) openPop({p: c.dataset.p, k: c.dataset.k}, c, "new");
+  else if (wc && !e.target.closest(".st") && can()) openPop({p: wc.dataset.p, k: wc.dataset.k}, wc, "ws");
 });
-document.addEventListener("click", e => {
-  const b = e.target.closest(".pk"); if (b && popAt) { S.ot[`${popAt.p}|${popAt.k}`] = +b.dataset.h; save(); closePop(); render(); return; }
-  if (e.target.closest("[data-pclose]")) closePop();
-});
-document.addEventListener("keydown", e => { if (e.key === "Escape") { closePop(); pasteVal = 0; document.querySelectorAll("td.cell").forEach(x => x.classList.remove("paste")); } });
+document.addEventListener("keydown", e => { if (e.key === "Escape") { closePop(); closeMenu(); closeModal(); stopPaste(); } });
 
-// ---------- staff ----------
-document.addEventListener("input", e => { const n = e.target.closest(".pn"); if (n) { const P = S.people.find(p => p.id === n.dataset.p); if (P) { P.name = n.textContent.trim() || P.name; save(); } } });
-document.addEventListener("keydown", e => { if (e.target.closest && e.target.closest(".pn") && e.key === "Enter") { e.preventDefault(); e.target.blur(); } });
+// ---------- staff menu: open in other pages ----------
+function roster(P) {
+  const {y, m} = S, nd = new Date(y, m + 1, 0).getDate();
+  const g = k => { try { const v = localStorage.getItem("ot:f:" + k); return v === null ? null : JSON.parse(v); } catch (e) { return null; } };
+  const mins = t => { const [a, b] = String(t).split(":").map(Number); return a * 60 + (b || 0); };
+  const sEnd = mins(g("sEnd") || "17:00"), oStart = mins(g("oStart") || "08:00"), brk = +(g("brk") ?? 1) * 60;
+  const hm = t => `${pad(Math.floor(t / 60) % 24)}:${pad(Math.round(t % 60))}`;
+  const ks = [], sc = [], wsr = [], otr = []; let tot = 0;
+  for (let d = 1; d <= nd; d++) {
+    const k = iso(y, m, d), w = wsOf(P.id, k), h = S.ot[`${P.id}|${k}`];
+    ks.push(k); wsr.push(w); sc.push(w === "W" ? "M001" : w === "O" ? "OFF" : "REST");
+    otr.push(h ? hm((w === "W" ? sEnd : oStart + brk) + h * 60) : ""); tot += h || 0;
+  }
+  const nm = P.name;
+  return [`Fieldname\tName\t${ks.join("\t")}\tTotal OT (Hrs)`, `Shiftcode\t${nm}\t${sc.join("\t")}\t`, `WorkStatus\t${nm}\t${wsr.join("\t")}\t`, `OT\t${nm}\t${otr.join("\t")}\t${tot}`].join("\n");
+}
+function openMenu(el, pid) {
+  const P = S.people.find(p => p.id === pid), mnu = $("menu");
+  mnu.innerHTML = `<div class="mh">${esc(P.name)} · ${X.mOpen}</div><button type="button" data-go="cal" data-p="${pid}">🐎 ${X.mCal}</button><button type="button" data-go="plan" data-p="${pid}">📊 ${X.mPlan}</button><hr><button type="button" data-go="ren" data-p="${pid}">✎ ${X.mRen}</button><button type="button" class="d" data-go="del" data-p="${pid}">✕ ${X.mDel}</button>`;
+  mnu.classList.add("on");
+  const r = el.getBoundingClientRect();
+  mnu.style.left = Math.min(innerWidth - mnu.offsetWidth - 8, r.left) + "px";
+  mnu.style.top = (r.bottom + mnu.offsetHeight + 8 > innerHeight ? r.top - mnu.offsetHeight - 6 : r.bottom + 6) + "px";
+}
+function closeMenu() { $("menu").classList.remove("on"); }
 document.addEventListener("click", e => {
-  const x = e.target.closest("[data-del]"); if (!x) return;
-  const id = x.dataset.del, P = S.people.find(p => p.id === id);
-  if (x.dataset.arm) { S.people = S.people.filter(p => p.id !== id); for (const k of Object.keys(S.ot)) if (k.startsWith(id + "|")) delete S.ot[k]; save(); render(); toast(X.tRm(P.name)); }
-  else { x.dataset.arm = 1; x.textContent = X.rmQ; x.style.color = "var(--bad)"; x.style.fontSize = "12px"; setTimeout(() => { if (x.isConnected) { delete x.dataset.arm; x.textContent = "×"; x.style.color = ""; x.style.fontSize = ""; } }, 3000); }
+  const n = e.target.closest("[data-pm]"); if (n) { closePop(); return openMenu(n, n.dataset.pm); }
+  const b = e.target.closest("[data-go]");
+  if (!b) { if (!e.target.closest("#menu")) closeMenu(); return; }
+  const P = S.people.find(p => p.id === b.dataset.p), go = b.dataset.go, lang = (window.HUB && HUB.lang) || "en";
+  if (go === "cal") { try { localStorage.setItem("kk-src", roster(P)); } catch (e) {} location.href = "calendar.html?lang=" + lang; }
+  else if (go === "plan") {
+    const {y, m} = S, nd = new Date(y, m + 1, 0).getDate();
+    try { localStorage.setItem("ot:f:src", JSON.stringify(roster(P))); localStorage.setItem("ot:f:from", JSON.stringify(iso(y, m, 1))); localStorage.setItem("ot:f:to", JSON.stringify(iso(y, m, nd))); } catch (e) {}
+    location.href = "ot.html?lang=" + lang;
+  }
+  else if (go === "ren") {
+    closeMenu(); if (!can()) return;
+    const span = document.querySelector(`[data-pm="${P.id}"]`); span.contentEditable = "true"; span.focus();
+    const sel = getSelection(), rg = document.createRange(); rg.selectNodeContents(span); sel.removeAllRanges(); sel.addRange(rg);
+    const done = () => { span.contentEditable = "false"; P.name = span.textContent.trim() || P.name; save(); render(); };
+    span.addEventListener("blur", done, {once: true});
+    span.addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); span.blur(); } });
+  }
+  else if (go === "del") {
+    if (!can()) return closeMenu();
+    if (!b.dataset.arm) { b.dataset.arm = 1; b.textContent = "✕ " + X.rmQ; return; }
+    S.people = S.people.filter(p => p.id !== P.id); for (const k of Object.keys(S.ot)) if (k.startsWith(P.id + "|")) delete S.ot[k];
+    closeMenu(); save(); render(); toast(X.tRm(P.name));
+  }
 });
-document.addEventListener("click", e => {
-  const a = e.target.closest("[data-add]"); if (!a) return;
-  const n = S.people.length, id = "p" + Date.now().toString(36);
-  S.people.push({id, name: X.person + " " + (n < 26 ? String.fromCharCode(65 + n) : n + 1), g: a.dataset.add}); save(); render();
-});
+document.addEventListener("keydown", e => { const n = e.target.closest && e.target.closest("[data-pm]"); if (n && n.contentEditable !== "true" && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openMenu(n, n.dataset.pm); } });
+
+// ---------- groups ----------
 $("gview").addEventListener("change", e => { S.view = e.target.value; save(); render(); });
-$("gNew").onclick = () => { $("gForm").hidden = false; $("gName").value = ""; $("gName").focus(); };
+$("gNew").onclick = () => { if (!can()) return; $("gForm").hidden = false; $("gName").value = ""; $("gName").focus(); };
 $("gCancel").onclick = () => { $("gForm").hidden = true; };
 $("gForm").onsubmit = e => {
   e.preventDefault(); const n = $("gName").value.trim(); if (!n) return;
   const id = "g" + Date.now().toString(36); S.groups.push({id, name: n}); S.view = id; save(); $("gForm").hidden = true; render(); toast(X.gMade(n));
 };
 document.addEventListener("click", e => {
+  const a = e.target.closest("[data-add]");
+  if (a) { if (!can()) return; const n = S.people.length; S.people.push({id: "p" + Date.now().toString(36), name: X.person + " " + (n < 26 ? String.fromCharCode(65 + n) : n + 1), g: a.dataset.add}); save(); render(); return; }
   const x = e.target.closest("[data-gdel]"); if (!x) return;
+  if (!can()) return;
   const id = x.dataset.gdel, G = S.groups.find(g => g.id === id);
   if (!x.dataset.arm) { x.dataset.arm = 1; x.textContent = X.rmQ; x.style.color = "var(--bad)"; x.style.fontSize = "11px"; setTimeout(() => { if (x.isConnected) { delete x.dataset.arm; x.textContent = "×"; x.style.color = ""; x.style.fontSize = ""; } }, 3000); return; }
   const ids = S.people.filter(p => p.g === id).map(p => p.id);
@@ -354,30 +534,54 @@ document.addEventListener("click", e => {
   for (const k of Object.keys(S.ot)) if (ids.includes(k.split("|")[0])) delete S.ot[k];
   if (S.view === id) S.view = "all"; save(); render(); toast(X.tRm(G.name));
 });
-// work status: tap to cycle W -> OFF -> REST
-document.addEventListener("click", e => {
-  const c = e.target.closest("td.wsc"); if (!c) return;
-  const [pid, k] = c.dataset.ws.split("|"); const P = S.people.find(p => p.id === pid);
-  const D = {k, w: new Date(k + "T12:00").getDay()};
-  const nx = WS_NEXT[wsOf(P, D)], def = D.w === 0 ? "R" : D.w === 6 ? "O" : "W";
-  if (nx === def) delete S.ws[c.dataset.ws]; else S.ws[c.dataset.ws] = nx;
-  save(); render();
-});
+
+// ---------- copy previous month (same weekday, whole weeks) ----------
+function prevYM() { return S.m === 0 ? {y: S.y - 1, m: 11} : {y: S.y, m: S.m - 1}; }
+let cpArm = 0;
+$("copyPrev").onclick = () => {
+  if (!can()) return;
+  const src = prevYM(), {y, m} = S, pre = `${y}-${pad(m + 1)}-`, spre = `${src.y}-${pad(src.m + 1)}-`;
+  const srcKeys = Object.keys(S.ot).filter(k => k.split("|")[1].startsWith(spre));
+  const lbl = (Y, M) => `${X.MN[M]} ${Y}`;
+  if (!srcKeys.length && !Object.keys(S.ws).some(k => k.split("|")[1].startsWith(spre))) return toast(X.noSrc(lbl(src.y, src.m)));
+  const has = Object.keys(S.ot).some(k => k.split("|")[1].startsWith(pre));
+  if (has && !cpArm) { cpArm = 1; $("copyPrev").textContent = X.copyQ; $("copyPrev").classList.add("arm"); setTimeout(() => { cpArm = 0; $("copyPrev").classList.remove("arm"); render(); }, 3000); return; }
+  cpArm = 0; $("copyPrev").classList.remove("arm");
+  for (const k of Object.keys(S.ot)) if (k.split("|")[1].startsWith(pre)) delete S.ot[k];
+  for (const k of Object.keys(S.ws)) if (k.split("|")[1].startsWith(pre)) delete S.ws[k];
+  // each target day takes the same day 4 weeks earlier (5 weeks if that is still in this month), so whole weeks and weekdays line up
+  const H = holidays(), nd = new Date(y, m + 1, 0).getDate();
+  let n = 0;
+  for (let d = 1; d <= nd; d++) {
+    const t = new Date(y, m, d, 12); let sk = null;
+    for (const sh of [28, 35]) { const s2 = new Date(t); s2.setDate(s2.getDate() - sh); if (s2.getMonth() === src.m && s2.getFullYear() === src.y) { sk = iso(src.y, src.m, s2.getDate()); break; } }
+    if (!sk) continue;
+    const tk = iso(y, m, d);
+    for (const P of S.people) {
+      const ov = S.ws[`${P.id}|${sk}`]; if (ov) S.ws[`${P.id}|${tk}`] = ov;
+      const h = S.ot[`${P.id}|${sk}`]; if (h && !H[tk]) { S.ot[`${P.id}|${tk}`] = h; n++; }
+    }
+  }
+  save(); render(); toast(X.tCopied(lbl(src.y, src.m), lbl(y, m), n));
+};
 
 // ---------- month & toolbar ----------
 $("prev").onclick = () => { S.m--; if (S.m < 0) { S.m = 11; S.y--; } save(); render(); };
 $("next").onclick = () => { S.m++; if (S.m > 11) { S.m = 0; S.y++; } save(); render(); };
-$("sample").onclick = () => { S = sample(); save(); render(); toast(X.tSample); };
+$("sample").onclick = () => { if (!can()) return; S = sample(); save(); render(); toast(X.tSample); };
 let clrArm = 0;
 $("clear").onclick = () => {
+  if (!can()) return;
   if (!clrArm) { clrArm = 1; $("clear").textContent = X.clearQ; $("clear").classList.add("arm"); setTimeout(() => { clrArm = 0; $("clear").textContent = X.clear; $("clear").classList.remove("arm"); }, 3000); return; }
   const pre = `${S.y}-${pad(S.m + 1)}-`;
   for (const k of Object.keys(S.ot)) if (k.split("|")[1].startsWith(pre)) delete S.ot[k];
   clrArm = 0; $("clear").textContent = X.clear; $("clear").classList.remove("arm"); save(); render(); toast(X.tClr);
 };
-$("holSave").onclick = () => { try { localStorage.setItem("kk-hol", $("hol").value); } catch (e) {} render(); toast(X.tHol); };
+$("holSave").onclick = () => { if (!can()) return; try { localStorage.setItem("kk-hol", $("hol").value); } catch (e) {} render(); toast(X.tHol); };
+document.addEventListener("hub:lang", () => { applyT(); render(); });
 
 load(); applyT(); render();
+}
 </script>
 </body>
 </html>
